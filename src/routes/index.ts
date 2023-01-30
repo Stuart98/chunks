@@ -4,13 +4,13 @@ import { lazy } from 'react'
 
 import RouteType from '../types/RouteType';
 
-const Welcome = lazy(() => import('../pages/Welcome'))
+const Chunk = lazy(() => import('../components/Chunk'))
 
 
 const routes = [
   {
-    path: '/', // the url
-    component: Welcome, // view rendered
+    path: '/view/*', // the url
+    component: Chunk, // view rendered
   } as RouteType,
 ] as RouteType[]
 

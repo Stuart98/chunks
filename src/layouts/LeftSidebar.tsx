@@ -1,83 +1,21 @@
 import { NavLink,  Routes, Link , useLocation} from 'react-router-dom'
 
-import FolderType from '../types/FolderType';
+import ChunkType from '../types/ChunkType';
 
-import FolderItem from '../components/FolderItem';
+import ChunkNavItem from '../components/ChunkNavItem';
 
-const folders = [
-    {
-        id: 1,
-        name: 'Projects',
-        slug: 'projects',
-        children: [
-            {
-                id: 2,
-                name: 'Project 1',
-                slug: 'project-1',
-                children: [
-                    {
-                        id: 9,
-                        name: 'Project 1.1',
-                        slug: 'project-1-1',
-                    },
-                    {
-                        id: 10,
-                        name: 'Project 1.2',
-                        slug: 'project-1-2',
-                    },
-                ],
-            },
-            {
-                id: 3,
-                name: 'Project 2',
-                slug: 'project-2',
-            },
-            {
-                id: 4,
-                name: 'Project 3',
-                slug: 'project-3',
-            },
-        ],
-    },
-    {
-        id: 5,
-        name: 'Inbox',
-        slug: 'inbox',
-        children: [
-            {
-                id: 6,
-                name: 'Inbox 1',
-                slug: 'inbox-1',
-            },
-            {
-                id: 7,
-                name: 'Inbox 2',
-                slug: 'inbox-2',
-            },
-            {
-                id: 8,
-                name: 'Inbox 3',
-                slug: 'inbox-3',
-            },
-
-        ],
-    },
-] as FolderType[];
+import { data } from '../data';
 
 function LeftSidebar(){
 
     return(
         <div className="drawer-side bg-base-200 p-5">
             <label htmlFor="left-sidebar-drawer" className="drawer-overlay"></label> 
-            <ul className="menu menu-vertical bg-base-100 rounded-box p-2 w-80 shadow-md">
-                <li className="menu-title mb-2 font-semibold text-xl">
-                    <span>Chunks</span>
-                </li>
-                
+            <ul className="menu menu-vertical bg-base-100 rounded-box p-2 w-80 shadow-md">                
                 {
-                    folders.map((folder, k) => {
+                    data.map((chunk, k) => {
                         return (
-                            <FolderItem folder={folder} parentPath={'/app'} key={k} />
+                            <ChunkNavItem chunk={chunk} parentPath={'/view'} key={k} />
                         )
                     })
                 }

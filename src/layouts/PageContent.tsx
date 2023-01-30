@@ -8,17 +8,18 @@ import routes from '../routes/index';
 import SuspenseContent from "./SuspenseContent";
 
 
-function PageContent(){
+function PageContent(props){
     const mainContentRef = useRef(null);
-
+console.log(props);
     return(
-        <div className="drawer-content flex flex-col ">
+        <div className="drawer-content flex flex-col bg-white rounded-box m-5 ml-0 shadow-md">
             <Header/>
-            <main className="flex-1 overflow-y-auto pt-8 px-6  bg-base-200" ref={mainContentRef}>
+            <main className="flex-1 overflow-y-auto pt-8 px-6" ref={mainContentRef}>
                 <Suspense fallback={<SuspenseContent />}>
                         <Routes>
                             {
                                 routes.map((route, key) => {
+                                    console.log(route);
                                     return(
                                         <Route
                                             key={key}
