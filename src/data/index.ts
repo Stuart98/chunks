@@ -1,4 +1,4 @@
-import ChunkType from "../types/ChunkType";
+import Chunk from "../types/Chunk.type";
 
 export const data = [
     {
@@ -91,9 +91,9 @@ export const data = [
 
         ],
     },
-] as ChunkType[];
+] as Chunk[];
 
-function findNode (slug: string, currentNode: ChunkType) : ChunkType|boolean {
+function findNode (slug: string, currentNode: Chunk) : Chunk|boolean {
     var i,
         currentChild,
         result;
@@ -124,5 +124,5 @@ function findNode (slug: string, currentNode: ChunkType) : ChunkType|boolean {
 export function findChunk(slug: string) {
     return findNode(slug, {
         children: data,
-    } as ChunkType);
+    } as Chunk);
 }

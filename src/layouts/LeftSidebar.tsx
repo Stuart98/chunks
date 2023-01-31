@@ -1,18 +1,13 @@
-import { NavLink,  Routes, Link , useLocation} from 'react-router-dom'
-
-import ChunkType from '../types/ChunkType';
-
 import ChunkNavItem from '../components/ChunkNavItem';
 
 import { useAppSelector, useAppDispatch } from '../state/hooks';
-
-import { decrement, increment } from './counterSlice'
+import { selectChunks } from './../state/reducers/chunksSlice';
 
 import { data } from '../data';
 
 function LeftSidebar() {
     
-    const chunks = useAppSelector(state => state.chunks.items)
+    const chunks = useAppSelector(selectChunks)
 
     return(
         <div className="drawer-side bg-base-200 p-5">

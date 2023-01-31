@@ -2,16 +2,16 @@
 
 import { lazy } from 'react'
 
-import RouteType from '../types/RouteType';
+import Route from '../types/Route.type';
 
-const Chunk = lazy(() => import('../components/Chunk'))
+const ChunkDisplay = lazy(() => import('../components/ChunkDisplay'))
 
 
 const routes = [
   {
     path: '/view/*', // the url
-    component: Chunk, // view rendered
-  } as RouteType,
-] as RouteType[]
+    component: ChunkDisplay, // view rendered
+  } as Route,
+] as Route[]
 
 export default routes;

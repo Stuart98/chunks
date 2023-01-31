@@ -1,4 +1,4 @@
-import { Provider } from 'react';
+import { Provider } from 'react-redux';
 import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
 
 import './App.css';

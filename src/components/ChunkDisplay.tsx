@@ -1,19 +1,19 @@
 import { PathMatch, useLocation } from 'react-router-dom';
 
-import ChunkType from "../types/ChunkType";
+import Chunk from "../types/Chunk.type";
 
 import { findChunk } from '../data';
 
 interface ChunkProps {
-    chunk: ChunkType;
+    chunk: Chunk;
 };
 
-export default function Chunk() {
+export default function ChunkDisplay() {
 
     let loc = useLocation();
-    
+
     const params = loc.pathname.replace(/^(\/view\/)/, '');
-    const chunk = findChunk(params.split('/').pop() as string) as ChunkType;
+    const chunk = findChunk(params.split('/').pop() as string) as Chunk;
 
     return (
         <div className="">

@@ -1,8 +1,8 @@
-interface RouteType {
+interface Route {
     path: string;
     component: React.ComponentType;
     exact?: boolean;
-    routes?: RouteType[];
+    routes?: Route[];
 }
 
-export default RouteType;
+export default Route;

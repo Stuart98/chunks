@@ -8,9 +8,9 @@ import routes from '../routes/index';
 import SuspenseContent from "./SuspenseContent";
 
 
-function PageContent(props){
+function PageContent(){
     const mainContentRef = useRef(null);
-console.log(props);
+
     return(
         <div className="drawer-content flex flex-col bg-white rounded-box m-5 ml-0 shadow-md">
             <Header/>

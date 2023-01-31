@@ -1,9 +1,9 @@
-import ChunkType from "../types/ChunkType";
+import Chunk from "../types/Chunk.type";
 
 import { NavLink } from 'react-router-dom'
 
 interface FolderItemProps {
-    chunk: ChunkType;
+    chunk: Chunk;
     parentPath: string;
 }
 
