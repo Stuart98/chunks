@@ -1,11 +1,10 @@
-import ChunkItem from './ChunkItem.type';
-
 interface Chunk {
     id: number;
+    parentId: number;
     name: string;
     slug: string;
-    children: Chunk[];
-    item: ChunkItem|null;
+    content: string;
+    language: string;
 }
 
 export default Chunk;

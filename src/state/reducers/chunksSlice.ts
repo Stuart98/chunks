@@ -1,12 +1,19 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import Folder from '../../types/Folder.type'
 import Chunk from '../../types/Chunk.type'
 import type { RootState } from '../store'
 
+import { createFindNode } from '../../util/treeUtils';
 import { data } from '../../data/';
 
 // Define a type for the slice state
 interface ChunksState {
-  items: Chunk[]
+  items: Folder[] | Chunk[]
+}
+
+interface AddPayload {
+    chunk: Folder | Chunk;
+    parent: Folder;
 }
 
 
@@ -20,7 +27,10 @@ export const chunksSlice = createSlice({
   // `createSlice` will infer the state type from the `initialState` argument
   initialState,
   reducers: {
-    add: (state, { payload: chunk }: PayloadAction<Chunk>) => {
+    select: (state, { payload: folder }: PayloadAction<Folder>) => {
+      folder.active = true;
+    },
+    add: (state, { payload: { chunk, parent } }: PayloadAction<AddPayload>) => {
       state.items = [
         ...state.items,
         chunk,
@@ -44,10 +54,13 @@ export const chunksSlice = createSlice({
   }
 })
 
-export const { add, remove, update } = chunksSlice.actions
+export const { select, add, remove, update } = chunksSlice.actions
 
 // Other code such as selectors can use the imported `RootState` type
 export const selectChunks = (state: RootState) => state.chunks.items;
+export const findNode = (state: RootState) => {
+    return createFindNode(state.chunks.items);
+};
 
 export type { ChunksState };
 

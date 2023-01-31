@@ -12,7 +12,7 @@ function PageContent(){
     const mainContentRef = useRef(null);
 
     return(
-        <div className="drawer-content flex flex-col bg-white rounded-box m-5 ml-0 shadow-md">
+        <div className="drawer-content flex flex-col bg-white rounded-box m-5 md:ml-0 shadow-md">
             <Header/>
             <main className="flex-1 overflow-y-auto pt-8 px-6" ref={mainContentRef}>
                 <Suspense fallback={<SuspenseContent />}>
