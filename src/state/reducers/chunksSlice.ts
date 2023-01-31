@@ -12,7 +12,7 @@ interface ChunksState {
 }
 
 interface AddPayload {
-    chunk: Folder | Chunk;
+    node: Folder | Chunk;
     parent: Folder;
 }
 
@@ -30,11 +30,11 @@ export const chunksSlice = createSlice({
     select: (state, { payload: folder }: PayloadAction<Folder>) => {
       folder.active = true;
     },
-    add: (state, { payload: { chunk, parent } }: PayloadAction<AddPayload>) => {
+    add: (state, { payload: node }: PayloadAction<Folder | Chunk>) => {
       state.items = [
         ...state.items,
-        chunk,
-      ];
+        node,
+      ] as Folder[] | Chunk[];
     },
     remove: (state, { payload: chunk }: PayloadAction<Chunk>) => {
       state.items = state.items.filter((c) => c.id !== chunk.id);

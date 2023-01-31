@@ -17,7 +17,7 @@ function TreeNodeItem({ node, parentPath }: TreeNodeItemProps) {
     return (
         <>
             <li className="">
-                {isFolder(node) && node.children && node.children.length > 0 && <span className="py-1">{node.name}</span>}
+                {isFolder(node) && node.children && <span className="py-1">{node.name}</span>}
                 {!isFolder(node) && <NavLink className="py-1" to={currentFolderPath}>
                     {node.name}
                 </NavLink>}
