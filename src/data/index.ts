@@ -4,22 +4,28 @@ import Chunk from "../types/Chunk.type";
 export const data = [
     {
         id: 1,
+        parentId: 0,
         name: 'Projects',
         slug: 'projects',
+        active: false,
         children: [
             {
                 id: 2,
+                parentId: 1,
                 name: 'Project 1',
                 slug: 'project-1',
+                active: false,
                 children: [
                     {
                         id: 9,
+                        parentId: 2,
                         name: 'Project 1.1',
                         slug: 'project-1-1',
                         content: 'project 1 content'
                     },
                     {
                         id: 10,
+                        parentId: 2,
                         name: 'Project 1.2',
                         slug: 'project-1-2',
                         content: `
@@ -38,12 +44,14 @@ export const data = [
             },
             {
                 id: 3,
+                parentId: 1,
                 name: 'Project 2',
                 slug: 'project-2',
                 content: 'project 2 content'
             },
             {
                 id: 4,
+                parentId: 1,
                 name: 'Project 3',
                 slug: 'project-3',
                 content: 'project 3 content'
@@ -52,23 +60,28 @@ export const data = [
     },
     {
         id: 5,
+        parentId: null,
         name: 'Inbox',
         slug: 'inbox',
+        active: false,
         children: [
             {
                 id: 6,
+                parentId: 5,
                 name: 'Inbox 1',
                 slug: 'inbox-1',
                 content: 'inbox 1 content'
             },
             {
                 id: 7,
+                parentId: 5,
                 name: 'Inbox 2',
                 slug: 'inbox-2',
                 content: 'inbox 2 content'
             },
             {
                 id: 8,
+                parentId: 5,
                 name: 'Inbox 3',
                 slug: 'inbox-3',
                 content: 'inbox 3 content'

@@ -1,13 +1,13 @@
 import Folder from "../types/Folder.type";
-import Chunk from "../types/Chunk.type";
+import Node from "../types/Node.type";
 
-export type FindKeys = 'id' | 'slug';
+export type FindKeys = 'id' | 'slug' | 'active';
 
-export function isFolder(item: Folder | Chunk): item is Folder {
+export function isFolder(item: Node): item is Folder {
   return (item as Folder).children !== undefined;
 }
 
-function findTreeNode (key: FindKeys = 'id', value: any, currentNode: Folder | Chunk) : Folder | Chunk | false {
+function findTreeNode (key: FindKeys = 'id', value: any, currentNode: Node) : Node | false {
     if (value == currentNode[key]) {
         return currentNode;
     } else if (isFolder(currentNode)) { // only try and dive into Folders
@@ -30,13 +30,13 @@ function findTreeNode (key: FindKeys = 'id', value: any, currentNode: Folder | C
     return false;
 }
 
-export function findNode(data: Folder[] | Chunk[], key: FindKeys = 'id', value: any) {
+export function findNode(data: Node[], key: FindKeys = 'id', value: any) {
     return findTreeNode(key, value, {
         children: data,
     } as Folder);
 }
 
-export function createFindNode(data: Folder[] | Chunk[]) {
+export function createFindNode(data: Node[]) {
     return (key: FindKeys = 'id', value: any) => findTreeNode(key, value, {
         children: data,
     } as Folder);

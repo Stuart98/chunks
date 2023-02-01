@@ -1,11 +1,11 @@
-import Chunk from './Chunk.type';
+import Node from './Node.type';
 
 interface Folder {
     id: number;
     parentId: number | null;
     name: string;
     slug: string;
-    children: Folder[] | Chunk[];
+    children: Node[];
     active: boolean;
 }
 

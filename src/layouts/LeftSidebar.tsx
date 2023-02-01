@@ -2,20 +2,20 @@ import TreeNodeItem from '../components/TreeNodeItem';
 
 import Folder from '../types/Folder.type';
 import { useAppSelector, useAppDispatch } from '../state/hooks';
-import { selectChunks, add } from './../state/reducers/chunksSlice';
-
-import { data } from '../data';
+import { selectChunks, add, selectNode } from './../state/reducers/chunksSlice';
 
 function LeftSidebar() {
     const dispatch = useAppDispatch();
-    const nodes = useAppSelector(selectChunks)
+    const nodes = useAppSelector(selectChunks);
+    const activeNode = useAppSelector(selectNode)('active', true);
 
     const onAddClick = () => {
+        debugger
         dispatch(add({
             id: 99,
             name: 'New Node',
             active: false,
-            parentId: null,
+            parentId: activeNode !== false ? activeNode.id : null,
             children: [],
             slug: 'new-node'
         } as Folder));

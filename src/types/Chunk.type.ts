@@ -5,6 +5,7 @@ interface Chunk {
     slug: string;
     content: string;
     language: string;
+    active: boolean;
 }
 
 export default Chunk;

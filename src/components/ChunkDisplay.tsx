@@ -5,7 +5,7 @@ import { useAppSelector, useAppDispatch } from '../state/hooks';
 import { isFolder } from "../util/treeUtils";
 import Chunk from "../types/Chunk.type";
 import Folder from "../types/Folder.type";
-import { findNode } from './../state/reducers/chunksSlice';
+import { selectNode } from './../state/reducers/chunksSlice';
 
 
 export default function ChunkDisplay() {
@@ -15,7 +15,7 @@ export default function ChunkDisplay() {
     const params = loc.pathname.replace(/^(\/view\/)/, '');
     const spl = params.split('/');
     const slug = spl.pop();
-    const chunk: Chunk | Folder | false = useAppSelector(findNode)('slug', slug);
+    const chunk: Chunk | Folder | false = useAppSelector(selectNode)('slug', slug);
 
     return (
         <div className="">

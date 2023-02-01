@@ -1,25 +1,50 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+
 import Folder from '../../types/Folder.type'
-import Chunk from '../../types/Chunk.type'
+import Node from '../../types/Node.type'
+
 import type { RootState } from '../store'
 
-import { createFindNode } from '../../util/treeUtils';
+import { createFindNode, findNode } from '../../util/treeUtils';
 import { data } from '../../data/';
 
 // Define a type for the slice state
 interface ChunksState {
-  items: Folder[] | Chunk[]
+  root: Folder
 }
 
 interface AddPayload {
-    node: Folder | Chunk;
+    node: Node;
     parent: Folder;
 }
 
 
-// Define the initial state using that type
 const initialState: ChunksState = {
-  items: data,
+  root: {
+    id: 0,
+    name: 'Root',
+    active: false,
+    children: data,
+  } as Folder
+}
+
+function updateNode (rootNode: Folder, node: Node): Node[] {
+  const parentNode = node.parentId === rootNode.id ? rootNode : findNode(rootNode.children, 'id', node.parentId) as Folder;
+
+  const index = parentNode.children.findIndex((c) => c.id === node.id);
+
+  if (index >= 0) {
+
+      const newChildren = [...parentNode.children] as Node[];
+
+      newChildren[index] = node;
+
+      parentNode.children = newChildren;
+
+      return [...rootNode.children];
+  }
+
+  return rootNode.children;
 }
 
 export const chunksSlice = createSlice({
@@ -28,28 +53,43 @@ export const chunksSlice = createSlice({
   initialState,
   reducers: {
     select: (state, { payload: folder }: PayloadAction<Folder>) => {
-      folder.active = true;
+      const currentActiveNode = findNode(state.root.children, 'active', true);
+console.log('deselect', currentActiveNode)
+      let root = state.root;
+      let newRoot = {
+        ...state.root
+      };
+
+      if (currentActiveNode) {
+        newRoot.children = updateNode(state.root, {
+          ...currentActiveNode,
+          active: false,
+        });
+
+        console.log('check deselect', findNode(state.root.children, 'active', true))
+      }
+console.log('select', folder.name)
+      newRoot.children = updateNode(root, {
+        ...folder,
+        active: true,
+      });
+
+      state.root = newRoot;
     },
-    add: (state, { payload: node }: PayloadAction<Folder | Chunk>) => {
-      state.items = [
-        ...state.items,
+
+    add: (state, { payload: node }: PayloadAction<Node>) => {
+      state.root.children = [
+        ...state.root.children,
         node,
-      ] as Folder[] | Chunk[];
+      ] as Node[];
     },
-    remove: (state, { payload: chunk }: PayloadAction<Chunk>) => {
-      state.items = state.items.filter((c) => c.id !== chunk.id);
+
+    remove: (state, { payload: node }: PayloadAction<Node>) => {
+      state.items = state.items.filter((c) => c.id !== node.id);
     },
-    // Use the PayloadAction type to declare the contents of `action.payload`
-    update: (state, { payload: chunk }: PayloadAction<Chunk>) => {
-        const index = state.items.findIndex((c) => c.id !== chunk.id);
-
-        if (index >= 0) {
-            const newItems = [...state.items];
-
-            newItems[index] = chunk;
-
-            state.items = newItems;
-        }
+    
+    update: (state, { payload: node }: PayloadAction<Node>) => {
+      state.root = updateNode(state.root, node);
     }
   }
 })
@@ -57,9 +97,9 @@ export const chunksSlice = createSlice({
 export const { select, add, remove, update } = chunksSlice.actions
 
 // Other code such as selectors can use the imported `RootState` type
-export const selectChunks = (state: RootState) => state.chunks.items;
-export const findNode = (state: RootState) => {
-    return createFindNode(state.chunks.items);
+export const selectChunks = (state: RootState) => state.chunks.root.children;
+export const selectNode = (state: RootState) => {
+    return createFindNode(state.chunks.root.children);
 };
 
 export type { ChunksState };
