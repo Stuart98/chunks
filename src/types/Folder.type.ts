@@ -1,12 +1,12 @@
 import Node from './Node.type';
 
 interface Folder {
-    id: number;
-    parentId: number | null;
+    id: string;
     name: string;
     slug: string;
-    children: Node[];
+    childIds: string[];
     active: boolean;
+    editing: boolean;
 }
 
 export default Folder;

@@ -1,17 +1,14 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 import Folder from '../../types/Folder.type'
-import Node from '../../types/Node.type'
+import Node from '../../types/Node.type';
+import TreeItem from '../../types/TreeItem.type'
+import TreeState from '../../types/TreeState.type'
 
 import type { RootState } from '../store'
 
-import { createFindNode, findNode } from '../../util/treeUtils';
+import { isFolder } from '../../util/isFolder';
 import { data } from '../../data/';
-
-// Define a type for the slice state
-interface ChunksState {
-  root: Folder
-}
 
 interface AddPayload {
     node: Node;
@@ -19,32 +16,33 @@ interface AddPayload {
 }
 
 
-const initialState: ChunksState = {
-  root: {
-    id: 0,
-    name: 'Root',
-    active: false,
-    children: data,
-  } as Folder
+const initialState: TreeState = {
+  nodes: data,
 }
 
-function updateNode (rootNode: Folder, node: Node): Node[] {
-  const parentNode = node.parentId === rootNode.id ? rootNode : findNode(rootNode.children, 'id', node.parentId) as Folder;
+const isRootState = (state: RootState | TreeState): state is RootState => {
+  return (state as RootState).chunks !== undefined;
+}
 
-  const index = parentNode.children.findIndex((c) => c.id === node.id);
 
-  if (index >= 0) {
-
-      const newChildren = [...parentNode.children] as Node[];
-
-      newChildren[index] = node;
-
-      parentNode.children = newChildren;
-
-      return [...rootNode.children];
+const getAllDescendantIds = (state: TreeState, nodeId: string): string[] => {
+  let node: Node = state.nodes[nodeId];
+  
+  if (isFolder(node)) {
+    return node.childIds.reduce((acc: string[], childId: string) => (
+      [ ...acc, childId, ...getAllDescendantIds(state, childId) ] as string[]
+    ), [])
   }
 
-  return rootNode.children;
+  return [];
+}
+
+const deleteMany = (state: TreeState, ids: string[]) => {
+  state = { ...state }
+
+  ids.forEach((id: string) => delete state.nodes[id]);
+
+  return state;
 }
 
 export const chunksSlice = createSlice({
@@ -52,56 +50,107 @@ export const chunksSlice = createSlice({
   // `createSlice` will infer the state type from the `initialState` argument
   initialState,
   reducers: {
-    select: (state, { payload: folder }: PayloadAction<Folder>) => {
-      const currentActiveNode = findNode(state.root.children, 'active', true);
-console.log('deselect', currentActiveNode)
-      let root = state.root;
-      let newRoot = {
-        ...state.root
-      };
+    makeActive: (state, { payload: folder }: PayloadAction<Folder>) => {
+      const node = selectNodeByActive(state)(true);
 
-      if (currentActiveNode) {
-        newRoot.children = updateNode(state.root, {
-          ...currentActiveNode,
+      if (node) {
+        state.nodes[node.id] = {
+          ...node,
           active: false,
-        });
-
-        console.log('check deselect', findNode(state.root.children, 'active', true))
+        }
       }
-console.log('select', folder.name)
-      newRoot.children = updateNode(root, {
+
+      state.nodes[folder.id] = {
         ...folder,
         active: true,
+      };
+    },
+
+    addChild: (state, { payload: node }: PayloadAction<Node>) => {
+      let parent = selectNodeByActive(state)(true);
+
+      if (!parent) {
+        parent = selectRootNode(state);
+      }
+
+      if (isFolder(parent)) {
+        state.nodes[parent.id] = {
+          ...parent,
+          childIds: [
+            ...parent.childIds,
+            node.id
+          ]
+        } as Node;
+
+        state.nodes[node.id] = node;
+      }
+    },
+
+    removeNode: (state, { payload: nodeId }: PayloadAction<string>) => {
+      const descendantIds = getAllDescendantIds(state, nodeId);
+
+      state = deleteMany(state, [ nodeId, ...descendantIds ]);
+
+      // find any that reference it as a child
+      Object.keys(state.nodes).forEach((id: string) => {
+        const node = state.nodes[id];
+
+        state.nodes[node.id] = isFolder(node) ? {
+          ...node,
+          childIds: node.childIds.filter((id: string) => id !== nodeId),
+        } : { ...node };
       });
-
-      state.root = newRoot;
-    },
-
-    add: (state, { payload: node }: PayloadAction<Node>) => {
-      state.root.children = [
-        ...state.root.children,
-        node,
-      ] as Node[];
-    },
-
-    remove: (state, { payload: node }: PayloadAction<Node>) => {
-      state.items = state.items.filter((c) => c.id !== node.id);
     },
     
     update: (state, { payload: node }: PayloadAction<Node>) => {
-      state.root = updateNode(state.root, node);
+      
+    },
+
+    startEdit: (state, { payload: nodeId }: PayloadAction<string>) => {
+      const node = state.nodes[nodeId];
+
+      const currentlyEditingNode = createSelectByProperty(state, 'editing')(true);
+      
+      if (currentlyEditingNode) {
+        currentlyEditingNode.editing = false;
+      }
+
+      if (node) {
+        node.editing = true;
+      }
+    },
+
+    completeEdit: (state, { payload: { id, value } }: PayloadAction<{ id: string, value: string }>) => {
+      const node = state.nodes[id];
+
+      node.name = value;
+      node.editing = false;
     }
   }
 })
 
-export const { select, add, remove, update } = chunksSlice.actions
+export const { makeActive, addChild, removeNode, update, startEdit, completeEdit } = chunksSlice.actions
 
-// Other code such as selectors can use the imported `RootState` type
-export const selectChunks = (state: RootState) => state.chunks.root.children;
-export const selectNode = (state: RootState) => {
-    return createFindNode(state.chunks.root.children);
+
+const createSelectByProperty = (state: RootState | TreeState, property: 'id' | 'slug' | 'active' | 'editing') => {
+  return (value: string | boolean) : Node | null => {
+    for (const [key, node] of Object.entries(isRootState(state) ? state.chunks.nodes : state.nodes)) {
+      if (node[property] === value) {
+        return node as Node;
+      }
+    }
+    return null;
+  }
 };
 
-export type { ChunksState };
+// Other code such as selectors can use the imported `RootState` type
+export const selectNodes = (state: RootState) => state.chunks.nodes;
+export const selectRootNode = (state: RootState | TreeState) => (isRootState(state) ? state.chunks.nodes : state.nodes)['0'] as Folder;
+export const selectNodeById = (state: RootState) : (id: string) => Node | null => createSelectByProperty(state, 'id');
+export const selectNodeBySlug = (state: RootState) : (slug: string) => Node | null => createSelectByProperty(state, 'slug');
+export const selectNodeByActive = (state: RootState | TreeState) : (active: boolean) => Node | null => createSelectByProperty(state, 'active');
+
+
+export type { TreeState };
 
 export default chunksSlice.reducer

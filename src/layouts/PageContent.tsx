@@ -19,7 +19,6 @@ function PageContent(){
                         <Routes>
                             {
                                 routes.map((route, key) => {
-                                    console.log(route);
                                     return(
                                         <Route
                                             key={key}

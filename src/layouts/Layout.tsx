@@ -1,8 +1,7 @@
 import PageContent from "./PageContent";
 import LeftSidebar from "./LeftSidebar";
 
-function Layout(props) {
-    console.log(props);
+function Layout() {
     return (
 
         <div data-theme="emerald" className="drawer drawer-mobile bg-base-200">

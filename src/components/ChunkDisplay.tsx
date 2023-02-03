@@ -2,10 +2,11 @@ import { PathMatch, useLocation } from 'react-router-dom';
 
 import { useAppSelector, useAppDispatch } from '../state/hooks';
 
-import { isFolder } from "../util/treeUtils";
+import { isFolder } from "../util/isFolder";
+import Node from "../types/Node.type";
 import Chunk from "../types/Chunk.type";
 import Folder from "../types/Folder.type";
-import { selectNode } from './../state/reducers/chunksSlice';
+import { selectNodeBySlug } from './../state/reducers/chunksSlice';
 
 
 export default function ChunkDisplay() {
@@ -14,8 +15,8 @@ export default function ChunkDisplay() {
 
     const params = loc.pathname.replace(/^(\/view\/)/, '');
     const spl = params.split('/');
-    const slug = spl.pop();
-    const chunk: Chunk | Folder | false = useAppSelector(selectNode)('slug', slug);
+    const slug = spl.pop() || '';
+    const chunk: Node | null = useAppSelector(selectNodeBySlug)(slug);
 
     return (
         <div className="">

@@ -1,3 +1,18 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+.menu li a + button,
+.menu li button + button {
+    display: none;
+}
+.menu li a:hover + button,
+.menu li button:hover + button {
+    display: block;
+}
+
+.menu li a + button:hover,
+.menu li button + button:hover {
+    display: block;
+}
