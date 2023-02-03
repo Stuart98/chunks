@@ -101,10 +101,6 @@ export const chunksSlice = createSlice({
         } : { ...node };
       });
     },
-    
-    update: (state, { payload: node }: PayloadAction<Node>) => {
-      
-    },
 
     startEdit: (state, { payload: nodeId }: PayloadAction<string>) => {
       const node = state.nodes[nodeId];
@@ -125,11 +121,15 @@ export const chunksSlice = createSlice({
 
       node.name = value;
       node.editing = false;
+    },
+
+    updateNode: (state, { payload: node } : PayloadAction<Node>) => {
+      state.nodes[node.id] = node;
     }
   }
 })
 
-export const { makeActive, addChild, removeNode, update, startEdit, completeEdit } = chunksSlice.actions
+export const { makeActive, addChild, removeNode, updateNode, startEdit, completeEdit } = chunksSlice.actions
 
 
 const createSelectByProperty = (state: RootState | TreeState, property: 'id' | 'slug' | 'active' | 'editing') => {

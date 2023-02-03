@@ -14,7 +14,7 @@ function PageContent(){
     return(
         <div className="drawer-content flex flex-col bg-white rounded-box m-5 md:ml-0 shadow-md">
             <Header/>
-            <main className="flex-1 overflow-y-auto pt-8 px-6" ref={mainContentRef}>
+            <main className="flex flex-1 overflow-y-auto py-5 px-6" ref={mainContentRef}>
                 <Suspense fallback={<SuspenseContent />}>
                         <Routes>
                             {

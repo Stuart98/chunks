@@ -1,14 +1,15 @@
-import Node from "../types/Node.type";
-
+import { NavLink } from 'react-router-dom'
 import { FolderOpenIcon, DocumentIcon, TrashIcon } from '@heroicons/react/24/outline'
 
+import Node from "../types/Node.type";
+
+import EditableNode from './EditableNode';
+
 import { useAppSelector, useAppDispatch } from '../state/hooks';
-import { selectNodeById, makeActive, removeNode, startEdit, completeEdit } from './../state/reducers/chunksSlice';
+import { selectNodeById, makeActive, removeNode, startEdit } from './../state/reducers/chunksSlice';
 
 import { isFolder } from "../util/isFolder";
 
-import { useRef, useState } from 'react'
-import { NavLink } from 'react-router-dom'
 
 interface TreeNodeItemProps {
     node: Node;
@@ -20,9 +21,6 @@ function TreeNodeItem({ node, parentPath }: TreeNodeItemProps) {
     const doSelectNodeById = useAppSelector(selectNodeById);
     const currentFolderPath = `${parentPath}/${node.slug}`;
     const dispatch = useAppDispatch();
-    
-    const editRef = useRef(null);
-    const [nameEditValue, setNameEditValue] = useState(node.name);
 
     const onFolderClick = () => {
         if (isFolder(node)) {
@@ -38,47 +36,22 @@ function TreeNodeItem({ node, parentPath }: TreeNodeItemProps) {
         dispatch(startEdit(node.id));
     }
 
-    const onEditChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setNameEditValue(e.target.value);
-    }
-
-    const onEditKeyup = (e: React.KeyboardEvent<object>) => {
-        if (['Enter', 'NumpadEnter'].includes(e.key)) {
-            (e.target as HTMLElement).blur();
-        }
-    }
-
-    const onEditBlur = () => {
-        dispatch(completeEdit({
-            id: node.id,
-            value: nameEditValue
-        }));
-    };
-
     return (
         <>
             <li className="w-full flex flex-row" onDoubleClick={onDoubleClick}>
 
                             {
                                 isFolder(node) &&
-                                <button className={['flex-1', 'py-1', 'rounded-lg', 'truncate', (node.active ? 'bg-gray-200' : '')].join(' ')} onClick={onFolderClick}>
+                                <button className={['flex-1', 'py-1', 'rounded-lg', 'truncate', (node.active ? 'bg-base-content/10' : '')].join(' ')} onClick={onFolderClick}>
                                     <FolderOpenIcon className="shrink-0 w-5" />
-                                    {
-                                        !node.editing ? 
-                                            <span className="truncate">{node.name}</span> :
-                                            <input className="block flex-1 py-0 px-2 rounded-lg w-1 bg-transparent" autoFocus type="text" value={nameEditValue} onChange={onEditChange} onBlur={onEditBlur} onKeyUp={onEditKeyup} />
-                                    }
+                                    <EditableNode node={node} />
                                 </button>
                             }
                             {
                                 !isFolder(node) &&
                                 <NavLink className="flex flex-row flex-1 py-1 rounded-lg truncate" to={currentFolderPath}>
                                     <DocumentIcon className="shrink-0 w-5" />
-                                    {
-                                        !node.editing ? 
-                                            <span className="truncate">{node.name}</span> :
-                                            <input className="block flex-1 py-0 px-2 rounded-lg w-1 bg-transparent" autoFocus type="text" value={nameEditValue} onChange={onEditChange} onBlur={onEditBlur} onKeyUp={onEditKeyup} />
-                                    }
+                                    <EditableNode node={node} />
                                 </NavLink>
                             }
                             <button className="p-2 w-8 rounded-full" onClick={onDeleteClick}>
