@@ -1,8 +1,12 @@
 import React, {  useEffect, useState } from 'react'
 
-function Header(){
+interface HeaderProps {
+    title: string;
+}
 
-    const pageTitle = 'Chunks';
+function Header({ title }: HeaderProps) {
+
+    const pageTitle = title || 'Chunks';
 
     return(
         <>

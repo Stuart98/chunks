@@ -7,7 +7,7 @@ import TreeState from '../../types/TreeState.type'
 
 import type { RootState } from '../store'
 
-import { isFolder } from '../../util/isFolder';
+import { isFolder } from '../../types/typeUtils';
 import { data } from '../../data/';
 
 interface AddPayload {

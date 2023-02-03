@@ -8,7 +8,7 @@ import EditableNode from './EditableNode';
 import { useAppSelector, useAppDispatch } from '../state/hooks';
 import { selectNodeById, makeActive, removeNode, startEdit } from './../state/reducers/chunksSlice';
 
-import { isFolder } from "../util/isFolder";
+import { isFolder } from "../types/typeUtils";
 
 
 interface TreeNodeItemProps {
