@@ -2,10 +2,15 @@ import { configureStore } from '@reduxjs/toolkit'
 
 import chunksReducer from '../reducers/chunksSlice';
 
+import { localStorageMiddleware, reHydrateStore } from '../middleware/localStorage';
+
 const store = configureStore({
   reducer: {
     chunks: chunksReducer,
-  }
+  },
+  preloadedState: reHydrateStore(),
+  middleware: getDefaultMiddleware =>
+    getDefaultMiddleware().concat(localStorageMiddleware),
 })
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

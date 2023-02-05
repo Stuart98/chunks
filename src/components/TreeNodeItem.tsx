@@ -1,4 +1,4 @@
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 import { FolderOpenIcon, DocumentIcon, TrashIcon } from '@heroicons/react/24/outline'
 
 import Node from "../types/Node.type";
@@ -17,10 +17,11 @@ interface TreeNodeItemProps {
 }
 
 function TreeNodeItem({ node, parentPath }: TreeNodeItemProps) {
+    const navigate = useNavigate();
+    const dispatch = useAppDispatch();
 
     const doSelectNodeById = useAppSelector(selectNodeById);
     const currentFolderPath = `${parentPath}/${node.slug}`;
-    const dispatch = useAppDispatch();
 
     const onFolderClick = () => {
         if (isFolder(node)) {
@@ -29,6 +30,8 @@ function TreeNodeItem({ node, parentPath }: TreeNodeItemProps) {
     }
 
     const onDeleteClick = () => {
+        navigate(parentPath);
+
         dispatch(removeNode(node.id));
     }
 

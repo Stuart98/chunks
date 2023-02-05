@@ -4,7 +4,7 @@ interface Chunk {
     slug: string;
     content: string;
     language: string;
-    selected: boolean;
+    active: boolean;
     editing: boolean;
 }
 

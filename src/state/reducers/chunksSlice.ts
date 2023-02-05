@@ -18,6 +18,7 @@ interface AddPayload {
 
 const initialState: TreeState = {
   nodes: data,
+  lastAddedNode: null,
 }
 
 const isRootState = (state: RootState | TreeState): state is RootState => {
@@ -83,6 +84,8 @@ export const chunksSlice = createSlice({
         } as Node;
 
         state.nodes[node.id] = node;
+
+        state.lastAddedNode = node;
       }
     },
 
@@ -131,6 +134,18 @@ export const chunksSlice = createSlice({
 
 export const { makeActive, addChild, removeNode, updateNode, startEdit, completeEdit } = chunksSlice.actions
 
+const findParents = (state: RootState, node: Node): Node[] => {
+  
+
+  for (const [key, n] of Object.entries(state.chunks.nodes)) {
+    if (n && isFolder(n) && n.childIds && n.childIds.indexOf(node.id) >= 0) {
+      return [ n as Folder, ...findParents(state, n) ];
+    }
+  }
+
+  return [];
+
+}
 
 const createSelectByProperty = (state: RootState | TreeState, property: 'id' | 'slug' | 'active' | 'editing') => {
   return (value: string | boolean) : Node | null => {
@@ -149,8 +164,8 @@ export const selectRootNode = (state: RootState | TreeState) => (isRootState(sta
 export const selectNodeById = (state: RootState) : (id: string) => Node | null => createSelectByProperty(state, 'id');
 export const selectNodeBySlug = (state: RootState) : (slug: string) => Node | null => createSelectByProperty(state, 'slug');
 export const selectNodeByActive = (state: RootState | TreeState) : (active: boolean) => Node | null => createSelectByProperty(state, 'active');
-
-
+export const selectParents = (state: RootState) : (node: Node) => Node[] => (node) => findParents(state, node);
+export const selectLastAddedNode = (state: RootState) => state.chunks.lastAddedNode;
 export type { TreeState };
 
 export default chunksSlice.reducer

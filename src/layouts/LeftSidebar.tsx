@@ -1,19 +1,48 @@
-import { redirect } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import TreeNodeItem from '../components/TreeNodeItem';
 import { DocumentPlusIcon, FolderPlusIcon } from '@heroicons/react/24/outline'
 
 import { v4 as uuidv4 } from 'uuid';
 
+import TreeItem from '../types/TreeItem.type';
+import Node from '../types/Node.type';
 import Folder from '../types/Folder.type';
 import Chunk from '../types/Chunk.type';
+import { isFolder } from '../types/typeUtils';
 import { useAppSelector, useAppDispatch } from '../state/hooks';
-import { selectNodes, selectRootNode, addChild, selectNodeByActive } from './../state/reducers/chunksSlice';
+import { selectNodes, selectRootNode, addChild, selectParents, selectLastAddedNode } from './../state/reducers/chunksSlice';
+import { useEffect } from 'react';
 
 function LeftSidebar() {
     const dispatch = useAppDispatch();
+    const navigate = useNavigate();
+
     const nodes = useAppSelector(selectNodes);
     const rootNode = useAppSelector(selectRootNode);
+    const lastAddedNode = useAppSelector(selectLastAddedNode);
+
+
+    useEffect(() => {
+        if (lastAddedNode) {
+            const parents = findParents(nodes, lastAddedNode);
+            parents.pop();
+
+            const path = ['view/', ...parents.map((p) => p.slug).join('/'), lastAddedNode.id].join('/');
+
+            navigate(path);
+        }
+    }, [lastAddedNode]);
+
+    const findParents = (nodes: TreeItem, node: Node): Node[] => {
+        for (const [key, n] of Object.entries(nodes)) {
+            if (n && isFolder(n) && n.childIds && n.childIds.indexOf(node.id) >= 0) {
+                return [ n as Folder, ...findParents(nodes, n) ];
+            }
+        }
+    
+        return [];
+    }
 
     const onAddFolderClick = () => {
         const id = uuidv4();
@@ -21,6 +50,7 @@ function LeftSidebar() {
             id,
             name: 'New Node',
             active: false,
+            editing: true,
             childIds: [],
             slug: id,
         } as Folder));
@@ -28,13 +58,17 @@ function LeftSidebar() {
 
     const onAddChunkClick = () => {
         const id = uuidv4();
-        dispatch(addChild({
+        const node = {
             id: id,
             name: 'New Node',
             active: false,
+            editing: true,
+            language: 'plaintext',
             slug: id,
             content: id,
-        } as Chunk));
+        } as Chunk;
+
+        dispatch(addChild(node));
     };
 
     return(

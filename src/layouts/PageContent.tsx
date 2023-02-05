@@ -27,7 +27,7 @@ function PageContent(){
     return(
         <div className="drawer-content flex flex-col rounded-box m-5 md:ml-0 shadow-md">
             <Header title={chunk ? chunk.name : ''} />
-            <main className="flex flex-1 bg-base-100 overflow-y-auto" ref={mainContentRef}>
+            <main className="flex flex-1 bg-base-100" ref={mainContentRef}>
                 <Suspense fallback={<SuspenseContent />}>
                         <Routes>
                             {
