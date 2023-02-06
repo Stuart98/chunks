@@ -1,10 +1,12 @@
+// REACT
 import { useState } from 'react'
 
-import Node from '../types/Node.type';
+// STATE
+import { useAppDispatch } from '@/state/hooks';
+import { completeEdit } from '@/state/reducers/chunksSlice';
 
-import { useAppDispatch } from '../state/hooks';
-import { completeEdit } from './../state/reducers/chunksSlice';
-
+// TYPES
+import Node from '@/types/Node.type';
 interface EditableNodeProps {
     node: Node;
 }

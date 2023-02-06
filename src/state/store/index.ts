@@ -1,8 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit'
 
-import chunksReducer from '../reducers/chunksSlice';
-
-import { localStorageMiddleware, reHydrateStore } from '../middleware/localStorage';
+// STATE
+import chunksReducer from '@/state/reducers/chunksSlice';
+import { localStorageMiddleware, reHydrateStore } from '@/state/middleware/localStorage';
 
 const store = configureStore({
   reducer: {

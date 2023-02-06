@@ -1,4 +1,4 @@
-import Node from './Node.type';
+import Node from '@/types/Node.type';
 
 interface TreeItem {
     [key: string]: Node;

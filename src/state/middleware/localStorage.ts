@@ -1,5 +1,3 @@
-import { RootState } from '../store/index';
-
 export const localStorageMiddleware = ({ getState }: any) => {
   return (next: any) => (action: any) => {
     const result = next(action);

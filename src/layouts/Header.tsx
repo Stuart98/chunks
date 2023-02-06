@@ -1,5 +1,4 @@
-import React, {  useEffect, useState } from 'react'
-
+// TYPES
 interface HeaderProps {
     title: string;
 }

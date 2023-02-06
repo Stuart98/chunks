@@ -1,30 +1,20 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import Folder from '../../types/Folder.type'
-import Node from '../../types/Node.type';
-import TreeItem from '../../types/TreeItem.type'
-import TreeState from '../../types/TreeState.type'
+// TYPES
+import { isFolder, isRootState } from '@/types/typeUtils';
+import Folder from '@/types/Folder.type';
+import Node from '@/types/Node.type';
+import TreeState from '@/types/TreeState.type';
+import type { RootState } from '@/state/store';
 
-import type { RootState } from '../store'
-
-import { isFolder } from '../../types/typeUtils';
-import { data } from '../../data/';
-
-interface AddPayload {
-    node: Node;
-    parent: Folder;
-}
+// DATA
+import { data } from '@/data';
 
 
 const initialState: TreeState = {
   nodes: data,
   lastAddedNode: null,
 }
-
-const isRootState = (state: RootState | TreeState): state is RootState => {
-  return (state as RootState).chunks !== undefined;
-}
-
 
 const getAllDescendantIds = (state: TreeState, nodeId: string): string[] => {
   let node: Node = state.nodes[nodeId];

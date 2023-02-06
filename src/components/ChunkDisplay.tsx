@@ -1,24 +1,28 @@
+// REACT
 import { useRef, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
-import { useAppSelector, useAppDispatch } from '../state/hooks';
+// 3RD PARTY
+import Editor from "@monaco-editor/react";
 
-import { isChunk } from "../types/typeUtils";
-import Chunk from "../types/Chunk.type";
-import Node from "../types/Node.type";
-import { selectNodeBySlug, updateNode } from './../state/reducers/chunksSlice';
+// STATE
+import { useAppDispatch } from '@/state/hooks';
+import { updateNode } from '@/state/reducers/chunksSlice';
 
-import Editor, { useMonaco } from "@monaco-editor/react";
-import ChunkToolbar from './ChunkToolbar';
+// TYPES
+import { isChunk } from "@/types/typeUtils";
+import Chunk from "@/types/Chunk.type";
+
+// UTILS
+import { getChunkFromRoute } from '@/util/route';
+
+// COMPONENTS
+import ChunkToolbar from '@/components/ChunkToolbar';
 
 export default function ChunkDisplay() {
     const dispatch = useAppDispatch();
-    const loc = useLocation();
 
-    const params = loc.pathname.replace(/^(\/view\/)/, '');
-    const spl = params.split('/');
-    const slug = spl.pop() || '';
-    const chunk: Chunk | null = useAppSelector(selectNodeBySlug)(slug) as Chunk;
+    const chunk = getChunkFromRoute();
 
     const editorRef = useRef(null);
     const monacoRef = useRef(null);
@@ -60,7 +64,7 @@ export default function ChunkDisplay() {
 
     useEffect(function() {
         // update the content if we've changed chunk, and it hasn't just changed with the content save
-        if (!prevChunk.current || prevChunk.current.id !== chunk.id) {
+        if (!prevChunk.current || (chunk && prevChunk.current.id !== chunk.id)) {
             prevChunk.current = chunk;
 
             updateEditorContent(chunk as Chunk);

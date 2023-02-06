@@ -1,11 +1,13 @@
-import { DocumentDuplicateIcon, CheckBadgeIcon } from '@heroicons/react/24/outline';
+// REACT
 import { useRef, useState } from 'react';
+import { DocumentDuplicateIcon, CheckBadgeIcon } from '@heroicons/react/24/outline';
 
-import Chunk from "../types/Chunk.type"
+// STATE
+import { useAppDispatch } from '@/state/hooks';
+import { updateNode } from '@/state/reducers/chunksSlice';
 
-import { useAppDispatch } from '../state/hooks';
-import { updateNode } from './../state/reducers/chunksSlice';
-
+// TYPES
+import Chunk from "@/types/Chunk.type"
 interface ChunkToolbarProps {
     chunk: Chunk;
 }

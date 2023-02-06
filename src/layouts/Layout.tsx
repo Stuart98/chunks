@@ -1,5 +1,5 @@
-import PageContent from "./PageContent";
-import LeftSidebar from "./LeftSidebar";
+import PageContent from "@/layouts/PageContent";
+import LeftSidebar from "@/layouts/LeftSidebar";
 
 function Layout() {
     return (

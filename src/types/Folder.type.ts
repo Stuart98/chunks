@@ -1,5 +1,3 @@
-import Node from './Node.type';
-
 interface Folder {
     id: string;
     name: string;

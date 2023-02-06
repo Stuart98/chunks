@@ -1,18 +1,24 @@
+// REACT
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import TreeNodeItem from '../components/TreeNodeItem';
+// THIRD PARTH
 import { DocumentPlusIcon, FolderPlusIcon } from '@heroicons/react/24/outline'
-
 import { v4 as uuidv4 } from 'uuid';
 
-import TreeItem from '../types/TreeItem.type';
-import Node from '../types/Node.type';
-import Folder from '../types/Folder.type';
-import Chunk from '../types/Chunk.type';
-import { isFolder } from '../types/typeUtils';
-import { useAppSelector, useAppDispatch } from '../state/hooks';
-import { selectNodes, selectRootNode, addChild, selectParents, selectLastAddedNode } from './../state/reducers/chunksSlice';
-import { useEffect } from 'react';
+// STATE
+import { useAppSelector, useAppDispatch } from '@/state/hooks';
+import { selectNodes, selectRootNode, addChild, selectLastAddedNode } from '@/state/reducers/chunksSlice';
+
+// TYPES
+import { isFolder } from '@/types/typeUtils';
+import TreeItem from '@/types/TreeItem.type';
+import Node from '@/types/Node.type';
+import Folder from '@/types/Folder.type';
+import Chunk from '@/types/Chunk.type';
+
+// COMPONENTS
+import TreeNodeItem from '@/components/TreeNodeItem';
 
 function LeftSidebar() {
     const dispatch = useAppDispatch();

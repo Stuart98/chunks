@@ -1,11 +1,11 @@
-// All components mapping with path for internal routes
-
+// REACT
 import { lazy } from 'react'
 
-import Route from '../types/Route.type';
+// TYPES
+import Route from '@/types/Route.type';
 
-const ChunkDisplay = lazy(() => import('../components/ChunkDisplay'))
-
+// COMPONENTS
+const ChunkDisplay = lazy(() => import('@/components/ChunkDisplay'))
 
 const routes = [
   {

@@ -1,20 +1,21 @@
+// REACT
 import { NavLink, useNavigate } from 'react-router-dom'
 import { FolderOpenIcon, DocumentIcon, TrashIcon } from '@heroicons/react/24/outline'
 
-import Node from "../types/Node.type";
+// STATE
+import { useAppSelector, useAppDispatch } from '@/state/hooks';
+import { selectNodeById, makeActive, removeNode, startEdit } from '@/state/reducers/chunksSlice';
 
-import EditableNode from './EditableNode';
-
-import { useAppSelector, useAppDispatch } from '../state/hooks';
-import { selectNodeById, makeActive, removeNode, startEdit } from './../state/reducers/chunksSlice';
-
-import { isFolder } from "../types/typeUtils";
-
-
+// TYPES
+import { isFolder } from "@/types/typeUtils";
+import Node from '@/types/Node.type';
 interface TreeNodeItemProps {
     node: Node;
     parentPath: string;
 }
+
+// COMPONENTS
+import EditableNode from '@/components/EditableNode';
 
 function TreeNodeItem({ node, parentPath }: TreeNodeItemProps) {
     const navigate = useNavigate();

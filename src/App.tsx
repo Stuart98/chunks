@@ -1,10 +1,15 @@
+// REACT
 import { Provider } from 'react-redux';
 import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
 
-import './App.css';
+// STATE
+import store from '@/state/store';
 
-import store from './state/store';
-import Layout from './layouts/Layout';
+// COMPONENTS
+import Layout from '@/layouts/Layout';
+
+// CSS
+import '@/App.css';
 
 function App() {
 

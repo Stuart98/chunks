@@ -1,17 +1,18 @@
+// REACT
 import { Suspense, useRef } from 'react';
 import { Route, Routes, useLocation } from 'react-router-dom'
 
-import { useAppSelector } from '../state/hooks';
+// STATE
+import { useAppSelector } from '@/state/hooks';
+import { selectNodeBySlug } from '@/state/reducers/chunksSlice';
 
-import Node from "../types/Node.type";
+// TYPES
+import Node from "@/types/Node.type";
 
-import Header from "./Header";
-
-import routes from '../routes/index';
-import { selectNodeBySlug } from './../state/reducers/chunksSlice';
-
+// COMPONENTS
+import routes from '@/routes/index';
+import Header from "@/layouts/Header";
 import SuspenseContent from "./SuspenseContent";
-
 
 function PageContent(){
     const mainContentRef = useRef(null);
