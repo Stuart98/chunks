@@ -8,12 +8,13 @@ import { selectNodeBySlug } from '@/state/reducers/chunksSlice';
 // TYPES
 import Node from '@/types/Node.type';
 
+/* eslint-disable import/prefer-default-export */
 export const getChunkFromRoute = (): Node | null => {
-    let loc = useLocation();
+  const loc = useLocation();
 
-    const params = loc.pathname.replace(/^(\/view\/)/, '');
-    const spl = params.split('/');
-    const slug = spl.pop() || '';
+  const params = loc.pathname.replace(/^(\/view\/)/, '');
+  const spl = params.split('/');
+  const slug = spl.pop() || '';
 
-    return useAppSelector(selectNodeBySlug)(slug);
+  return useAppSelector(selectNodeBySlug)(slug);
 };

@@ -1,6 +1,7 @@
 // REACT
+import React from 'react';
 import { Provider } from 'react-redux';
-import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 // STATE
 import store from '@/state/store';
@@ -12,17 +13,15 @@ import Layout from '@/layouts/Layout';
 import '@/App.css';
 
 function App() {
-    return (
-        <>
-            <Provider store={store}>
-                <BrowserRouter>
-                    <Routes>
-                        <Route path="*" element={<Layout />} />
-                    </Routes>
-                </BrowserRouter>
-            </Provider>
-        </>
-    );
+  return (
+    <Provider store={store}>
+      <BrowserRouter>
+        <Routes>
+          <Route path="*" element={<Layout />} />
+        </Routes>
+      </BrowserRouter>
+    </Provider>
+  );
 }
 
 export default App;
