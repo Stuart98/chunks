@@ -1,5 +1,5 @@
-import Node from "../types/Node.type";
-import TreeItem from "../types/TreeItem.type";
+import Node from '../types/Node.type';
+import TreeItem from '../types/TreeItem.type';
 
 export const data = {
     '0': {
@@ -49,7 +49,7 @@ export const data = {
             Sed blandit sodales euismod. Suspendisse potenti. In vulputate sem non magna ultricies, ut rhoncus felis pretium. Nam fringilla, sapien ut viverra tincidunt, eros sapien facilisis nulla, non posuere turpis arcu nec neque. Integer egestas tincidunt purus id laoreet. Nunc commodo erat et aliquet rutrum. Ut tincidunt risus ac velit dignissim, eget viverra tortor eleifend. Pellentesque finibus accumsan maximus.
             \n\n\n                
             Donec auctor, velit eu vestibulum sollicitudin, est ipsum rutrum tellus, id rhoncus arcu nulla nec arcu. Phasellus ut cursus augue. In pharetra mattis nulla quis convallis. Mauris vel turpis vitae enim sodales lacinia maximus nec tortor. Sed sit amet justo nisl. Maecenas ac cursus sapien. Sed semper fermentum tristique. Nulla sed cursus lacus. Nullam neque nisl, tempus in libero nec, aliquam accumsan ex. Mauris nec quam mi. In hac habitasse platea dictumst. Phasellus congue tempor risus, eget cursus nulla fermentum a.                            
-        `
+        `,
     } as Node,
     '3': {
         id: '3',
@@ -98,4 +98,4 @@ export const data = {
         content: '.test { color: red; }',
         editing: false,
     } as Node,
- } as TreeItem;
+} as TreeItem;

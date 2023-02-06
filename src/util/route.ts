@@ -14,6 +14,6 @@ export const getChunkFromRoute = (): Node | null => {
     const params = loc.pathname.replace(/^(\/view\/)/, '');
     const spl = params.split('/');
     const slug = spl.pop() || '';
-    
+
     return useAppSelector(selectNodeBySlug)(slug);
-}
+};

@@ -12,20 +12,17 @@ import Layout from '@/layouts/Layout';
 import '@/App.css';
 
 function App() {
-
-  return (
-    <>
-      <Provider store={store}>
-        <BrowserRouter>
-          <Routes>
-            
-            <Route path="*" element={<Layout />} />
-
-          </Routes>
-        </BrowserRouter>
-      </Provider>
-    </>
-  )
+    return (
+        <>
+            <Provider store={store}>
+                <BrowserRouter>
+                    <Routes>
+                        <Route path="*" element={<Layout />} />
+                    </Routes>
+                </BrowserRouter>
+            </Provider>
+        </>
+    );
 }
 
-export default App
+export default App;
