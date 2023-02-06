@@ -9,11 +9,11 @@ import {
 // STATE
 import { useAppSelector, useAppDispatch } from '@/state/hooks';
 import {
-  selectNodeById,
   makeActive,
   removeNode,
   startEdit,
 } from '@/state/reducers/chunksSlice';
+import { selectNodeById } from '@/state/selectors/chunks';
 
 // TYPES
 import { isFolder } from '@/types/typeUtils';

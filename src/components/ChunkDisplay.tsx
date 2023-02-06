@@ -14,6 +14,7 @@ import Chunk from '@/types/Chunk.type';
 
 // UTILS
 import { getChunkFromRoute } from '@/util/route';
+import configureMonaco from '@/monaco/configureMonaco';
 
 // COMPONENTS
 import ChunkToolbar from '@/components/ChunkToolbar';
@@ -83,24 +84,31 @@ export default function ChunkDisplay() {
     }
   }, [chunk]);
 
+  if (chunk) {
+    useEffect(() => {
+      updateEditorContent(chunk as Chunk);
+    }, [(chunk as Chunk).language]);
+  }
+
   return (
     <div className="flex flex-col flex-1 pb-5 px-6 overflow-hidden">
       {chunk && isChunk(chunk) && (
         <>
           <ChunkToolbar chunk={chunk} />
           <Editor
-            theme="vs-dark"
+            theme="chunks-dark"
             defaultLanguage={
-                            chunk && chunk.language && chunk.language
-                              ? chunk.language
-                              : 'plaintext'
-                        }
+              chunk && chunk.language && chunk.language
+                ? chunk.language
+                : 'plaintext'
+            }
             options={{
               fontSize: 18,
               minimap: { enabled: false },
             }}
             onChange={onEditorChange}
             onMount={handleEditorDidMount}
+            beforeMount={configureMonaco}
           />
         </>
       )}

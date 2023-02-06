@@ -5,17 +5,16 @@ import { isFolder } from '@/types/typeUtils';
 import Folder from '@/types/Folder.type';
 import Node from '@/types/Node.type';
 import TreeState from '@/types/TreeState.type';
-import type { RootState } from '@/state/store';
 
 // DATA
 import data from '@/data';
+
+import { createSelectByProperty, selectNodeByActive, selectRootNode } from '@/state/selectors/chunks';
 
 const initialState: TreeState = {
   nodes: data,
   lastAddedNode: null,
 };
-
-const isRootState = (state: RootState | TreeState): boolean => state && (state as RootState).chunks !== undefined;
 
 const getAllDescendantIds = (state: TreeState, nodeId: string): string[] => {
   const node: Node = state.nodes[nodeId];
@@ -34,68 +33,9 @@ const getAllDescendantIds = (state: TreeState, nodeId: string): string[] => {
   return [];
 };
 
-const deleteMany = (state: TreeState, ids: string[]) => {
-  const newState = { ...state };
-
-  ids.forEach((id: string) => delete newState.nodes[id]);
-
-  return newState;
-};
-
-/* eslint-disable no-restricted-syntax */
-const findParents = (state: RootState, node: Node): Node[] => {
-  for (const [, n] of Object.entries(state.chunks.nodes)) {
-    if (
-      n
-            && isFolder(n)
-            && n.childIds
-            && n.childIds.indexOf(node.id) >= 0
-    ) {
-      return [n as Folder, ...findParents(state, n)];
-    }
-  }
-
-  return [];
-};
-
-const createSelectByProperty = (
-  state: RootState | TreeState,
-  property: 'id' | 'slug' | 'active' | 'editing',
-) => (value: string | boolean): Node | null => {
-  for (const [, node] of Object.entries(
-    isRootState(state)
-      ? (state as RootState).chunks.nodes
-      : (state as TreeState).nodes,
-  )) {
-    if (node[property] === value) {
-      return node as Node;
-    }
-  }
-  return null;
-};
-/* eslint-enable no-restricted-syntax */
-
-/* eslint-disable arrow-body-style */
-export const selectNodes = (state: RootState) => state.chunks.nodes;
-export const selectRootNode = (state: RootState | TreeState) => {
-  return (
-        isRootState(state)
-          ? (state as RootState).chunks.nodes
-          : (state as TreeState).nodes
-    )['0'] as Folder;
-};
-
-export const selectNodeById = (
-  state: RootState,
-): ((id: string) => Node | null) => createSelectByProperty(state, 'id');
-export const selectNodeBySlug = (
-  state: RootState,
-): ((slug: string) => Node | null) => createSelectByProperty(state, 'slug');
-export const selectNodeByActive = (
-  state: RootState | TreeState,
-): ((active: boolean) => Node | null) => createSelectByProperty(state, 'active');
-export const selectParents = (state: RootState): ((node: Node) => Node[]) => (node) => findParents(state, node);
-export const selectLastAddedNode = (state: RootState) => state.chunks.lastAddedNode;
+const generateSlug = (name: string) => (name.toLowerCase()
+  .replace(/[^\w ]+/g, '')
+  .replace(/ +/g, '-'));
 
 export const chunksSlice = createSlice({
   name: 'chunks',
@@ -133,16 +73,21 @@ export const chunksSlice = createSlice({
           childIds: [...parent.childIds, node.id],
         } as Node;
 
-        newState.nodes[node.id] = node;
+        newState.nodes[node.id] = {
+          ...node,
+          slug: generateSlug(parent.name),
+        };
 
-        newState.lastAddedNode = node;
+        newState.lastAddedNode = newState.nodes[node.id];
       }
     },
 
     removeNode: (state, { payload: nodeId }: PayloadAction<string>) => {
+      const newState = { ...state };
       const descendantIds = getAllDescendantIds(state, nodeId);
 
-      const newState = deleteMany(state, [nodeId, ...descendantIds]);
+      // delete node and descendants
+      [nodeId, ...descendantIds].forEach((id: string) => delete newState.nodes[id]);
 
       // find any that reference it as a child
       Object.keys(state.nodes).forEach((id: string) => {
@@ -186,6 +131,7 @@ export const chunksSlice = createSlice({
 
       node.name = value;
       node.editing = false;
+      node.slug = generateSlug(value);
     },
 
     updateNode: (state, { payload: node }: PayloadAction<Node>) => {

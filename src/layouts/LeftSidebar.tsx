@@ -9,11 +9,13 @@ import { v4 as uuidv4 } from 'uuid';
 // STATE
 import { useAppSelector, useAppDispatch } from '@/state/hooks';
 import {
+  addChild,
+} from '@/state/reducers/chunksSlice';
+import {
   selectNodes,
   selectRootNode,
-  addChild,
   selectLastAddedNode,
-} from '@/state/reducers/chunksSlice';
+} from '@/state/selectors/chunks';
 
 // TYPES
 import { isFolder } from '@/types/typeUtils';

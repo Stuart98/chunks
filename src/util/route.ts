@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom';
 
 // STATE
 import { useAppSelector } from '@/state/hooks';
-import { selectNodeBySlug } from '@/state/reducers/chunksSlice';
+import { selectNodeBySlug } from '@/state/selectors/chunks';
 
 // TYPES
 import Node from '@/types/Node.type';
