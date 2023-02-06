@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-
 .menu li a + button,
 .menu li button + button {
     display: none;

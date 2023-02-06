@@ -1,8 +1,9 @@
-import TreeItem from './TreeItem.type';
-import Nodee from './Node.type';
+import TreeItem from '@/types/TreeItem.type';
+import Node from '@/types/Node.type';
 
 interface TreeState {
     nodes: TreeItem;
+    lastAddedNode: Node | null;
 }
 
 export default TreeState;

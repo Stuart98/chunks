@@ -1,40 +1,50 @@
-import { Suspense, lazy, useEffect, useRef } from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
+// REACT
+import { Suspense, useRef } from 'react';
+import { Route, Routes, useLocation } from 'react-router-dom';
 
-import Header from "./Header";
+// STATE
+import { useAppSelector } from '@/state/hooks';
+import { selectNodeBySlug } from '@/state/reducers/chunksSlice';
 
-import routes from '../routes/index';
+// TYPES
+import Node from '@/types/Node.type';
 
-import SuspenseContent from "./SuspenseContent";
+// COMPONENTS
+import routes from '@/routes/index';
+import Header from '@/layouts/Header';
+import SuspenseContent from './SuspenseContent';
 
-
-function PageContent(){
+function PageContent() {
     const mainContentRef = useRef(null);
 
-    return(
-        <div className="drawer-content flex flex-col bg-white rounded-box m-5 md:ml-0 shadow-md">
-            <Header/>
-            <main className="flex-1 overflow-y-auto pt-8 px-6" ref={mainContentRef}>
+    let loc = useLocation();
+
+    const params = loc.pathname.replace(/^(\/view\/)/, '');
+    const spl = params.split('/');
+    const slug = spl.pop() || '';
+    const chunk: Node | null = useAppSelector(selectNodeBySlug)(slug);
+
+    return (
+        <div className="drawer-content flex flex-col rounded-box m-5 md:ml-0 shadow-md">
+            <Header title={chunk ? chunk.name : ''} />
+            <main className="flex flex-1 bg-base-100" ref={mainContentRef}>
                 <Suspense fallback={<SuspenseContent />}>
-                        <Routes>
-                            {
-                                routes.map((route, key) => {
-                                    return(
-                                        <Route
-                                            key={key}
-                                            path={`${route.path}`}
-                                            element={<route.component />}
-                                        />
-                                    )
-                                })
-                            }
-                        </Routes>
+                    <Routes>
+                        {routes.map((route, key) => {
+                            return (
+                                <Route
+                                    key={key}
+                                    path={`${route.path}`}
+                                    element={<route.component />}
+                                />
+                            );
+                        })}
+                    </Routes>
                 </Suspense>
                 <div className="h-16"></div>
             </main>
-        </div> 
-    )
+        </div>
+    );
 }
 
-
-export default PageContent
+export default PageContent;

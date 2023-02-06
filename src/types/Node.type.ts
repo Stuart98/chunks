@@ -1,5 +1,5 @@
-import Folder from './Folder.type';
-import Chunk from './Chunk.type';
+import Folder from '@/types/Folder.type';
+import Chunk from '@/types/Chunk.type';
 
 type Node = Folder | Chunk;
 
