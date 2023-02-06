@@ -84,11 +84,11 @@ export default function ChunkDisplay() {
     }
   }, [chunk]);
 
-  if (chunk) {
     useEffect(() => {
-      updateEditorContent(chunk as Chunk);
-    }, [(chunk as Chunk).language]);
-  }
+        if (chunk) {
+            updateEditorContent(chunk as Chunk);
+        }
+    }, [(chunk as Chunk)?.language]);
 
   return (
     <div className="flex flex-col flex-1 pb-5 px-6 overflow-hidden">
