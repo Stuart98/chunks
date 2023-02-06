@@ -117,8 +117,6 @@ export const chunksSlice = createSlice({
         ...folder,
         active: true,
       };
-
-      return newState;
     },
 
     addChild: (state, { payload: node }: PayloadAction<Node>) => {
@@ -139,8 +137,6 @@ export const chunksSlice = createSlice({
 
         newState.lastAddedNode = node;
       }
-
-      return newState;
     },
 
     removeNode: (state, { payload: nodeId }: PayloadAction<string>) => {
@@ -161,8 +157,6 @@ export const chunksSlice = createSlice({
           }
           : { ...node };
       });
-
-      return newState;
     },
 
     startEdit: (state, { payload: nodeId }: PayloadAction<string>) => {
@@ -198,8 +192,6 @@ export const chunksSlice = createSlice({
       const newState = { ...state };
 
       newState.nodes[node.id] = node;
-
-      return newState;
     },
   },
 });
