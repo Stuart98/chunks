@@ -9,8 +9,8 @@ const ChunkDisplay = lazy(() => import('@/components/ChunkDisplay'));
 
 const routes = [
     {
-        path: '/view/*', // the url
-        component: ChunkDisplay, // view rendered
+      path: '/view/*', // the url
+      component: ChunkDisplay, // view rendered
     } as Route,
 ] as Route[];
 
