@@ -108,14 +108,14 @@ function LeftSidebar() {
               className="btn btn-primary btn-circle btn-sm p-1 mr-3"
               onClick={onAddFolderClick}
             >
-              <FolderPlusIcon />
+              <FolderPlusIcon className="w-5 h-5" />
             </button>
             <button
               type="button"
               className="btn btn-primary btn-circle btn-sm p-1"
               onClick={onAddChunkClick}
             >
-              <DocumentPlusIcon />
+              <DocumentPlusIcon className="w-5 h-5" />
             </button>
           </div>
 
