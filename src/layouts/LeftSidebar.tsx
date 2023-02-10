@@ -26,6 +26,9 @@ import Chunk from '@/types/Chunk.type';
 
 // COMPONENTS
 import TreeNodeItem from '@/components/TreeNodeItem';
+import FolderComp from './FolderComp';
+
+import { setAll } from '@/state/reducers/foldersSlice';
 
 const findParents = (nodes: TreeItem, node: Node): Node[] => {
   /* eslint-disable no-restricted-syntax */
@@ -96,8 +99,11 @@ function LeftSidebar() {
     dispatch(addChild(node));
   };
 
+  dispatch(setAll(nodes));
+
   return (
     <div className="drawer-side">
+      <FolderComp />
       {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
       <label htmlFor="left-sidebar-drawer" className="drawer-overlay" />
       <div className="bg-base-200 w-80 p-5 h-full">

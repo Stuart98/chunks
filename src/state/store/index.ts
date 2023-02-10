@@ -2,6 +2,7 @@ import { configureStore } from '@reduxjs/toolkit';
 
 // STATE
 import chunksReducer from '@/state/reducers/chunksSlice';
+import foldersReducer from '@/state/reducers/foldersSlice';
 import {
   localStorageMiddleware,
   reHydrateStore,
@@ -10,6 +11,7 @@ import {
 const store = configureStore({
   reducer: {
     chunks: chunksReducer,
+    folders: foldersReducer,
   },
   preloadedState: reHydrateStore(),
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(localStorageMiddleware),
