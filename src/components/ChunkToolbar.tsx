@@ -7,7 +7,7 @@ import {
 
 // STATE
 import { useAppDispatch } from '@/state/hooks';
-import { updateNode } from '@/state/reducers/chunksSlice';
+import { updateNode } from '@/state/reducers/xchunksSlice';
 
 // TYPES
 import Chunk from '@/types/Chunk.type';

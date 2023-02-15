@@ -1,5 +1,6 @@
 interface Chunk {
     id: string;
+    folderId: string;
     name: string;
     slug: string;
     content: string;

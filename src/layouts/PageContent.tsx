@@ -4,7 +4,7 @@ import { Route, Routes, useLocation } from 'react-router-dom';
 
 // STATE
 import { useAppSelector } from '@/state/hooks';
-import { selectNodeBySlug } from '@/state/selectors/chunks';
+//import { selectNodeBySlug } from '@/state/selectors/chunks';
 
 // TYPES
 import Node from '@/types/Node.type';
@@ -22,12 +22,13 @@ function PageContent() {
   const params = loc.pathname.replace(/^(\/view\/)/, '');
   const spl = params.split('/');
   const slug = spl.pop() || '';
-  const chunk: Node | null = useAppSelector(selectNodeBySlug)(slug);
+  const chunk: Node | null = null; //useAppSelector(selectNodeBySlug)(slug);
 
   return (
     <div className="drawer-content flex flex-col rounded-box m-5 md:ml-0 shadow-md">
       <Header title={chunk ? chunk.name : ''} />
       <main className="flex flex-1 bg-base-100" ref={mainContentRef}>
+        <div className="column-2">
         <Suspense fallback={<SuspenseContent />}>
           <Routes>
             {routes.map((route) => (
@@ -39,6 +40,7 @@ function PageContent() {
             ))}
           </Routes>
         </Suspense>
+        </div>
         <div className="h-16" />
       </main>
     </div>

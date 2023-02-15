@@ -5,56 +5,56 @@ import {
   DocumentIcon,
   TrashIcon,
 } from '@heroicons/react/24/outline';
-
+import { useDispatch } from 'react-redux';
 // STATE
 import { useAppSelector, useAppDispatch } from '@/state/hooks';
-import {
-  makeActive,
-  removeNode,
-  startEdit,
-} from '@/state/reducers/chunksSlice';
-import { selectNodeById } from '@/state/selectors/chunks';
 
 // TYPES
-import { isFolder } from '@/types/typeUtils';
-import Node from '@/types/Node.type';
+import Folder from '@/types/Folder.type';
 
 // COMPONENTS
 import EditableNode from '@/components/EditableNode';
+import { makeActive, startEdit, completeEdit, selectFolderByParentId } from '@/state/reducers/foldersSlice';
 
 interface TreeNodeItemProps {
-    node: Node;
+    node: Folder;
     parentPath: string;
 }
 
 function TreeNodeItem({ node, parentPath }: TreeNodeItemProps) {
   const navigate = useNavigate();
-  const dispatch = useAppDispatch();
+  const dispatch = useDispatch();
 
-  const doSelectNodeById = useAppSelector(selectNodeById);
-  const currentFolderPath = `${parentPath}/${node.slug}`;
+  const childrenNodes = useAppSelector((state) => selectFolderByParentId(state, node.id));
+  const currentFolderPath = `${parentPath}/${node.id}`;
 
   const onFolderClick = () => {
-    if (isFolder(node)) {
-      dispatch(makeActive(node));
-    }
+    
+      // dispatch(makeActive(node.id));
+    
   };
 
   const onDeleteClick = () => {
-    navigate(parentPath);
+    // navigate(parentPath);
 
-    dispatch(removeNode(node.id));
+    // dispatch(removeNode(node.id));
   };
 
   const onDoubleClick = () => {
     dispatch(startEdit(node.id));
   };
 
+  const onEditComplete = (value: string) => {
+    dispatch(completeEdit({
+        folderId: node.id,
+        value,
+    }));
+  }
+
   return (
     <>
       <li className="w-full flex flex-row" onDoubleClick={onDoubleClick}>
-        {isFolder(node) && (
-        <button
+        { 1==2 && <button
           type="button"
           className={[
             'flex-1',
@@ -66,18 +66,16 @@ function TreeNodeItem({ node, parentPath }: TreeNodeItemProps) {
           onClick={onFolderClick}
         >
           <FolderOpenIcon className="shrink-0 w-5" />
-          <EditableNode node={node} />
-        </button>
-        )}
-        {!isFolder(node) && (
+          
+          <EditableNode node={node} onEditComplete={onEditComplete} />
+        </button> }
         <NavLink
           className="flex flex-row flex-1 py-1 rounded-lg truncate"
           to={currentFolderPath}
         >
-          <DocumentIcon className="shrink-0 w-5" />
-          <EditableNode node={node} />
+          <FolderOpenIcon className="shrink-0 w-5" />
+          <EditableNode node={node} onEditComplete={onEditComplete} />
         </NavLink>
-        )}
         <button
           type="button"
           className="p-2 w-8 rounded-full"
@@ -86,20 +84,20 @@ function TreeNodeItem({ node, parentPath }: TreeNodeItemProps) {
           <TrashIcon className="w-4" />
         </button>
       </li>
-      {isFolder(node) && node.childIds && (
-        <ul className="w-full rounded-box bg-base-100 pl-4">
-          {node.childIds.map((id: string) => {
-            const childNode = doSelectNodeById(id);
-            return childNode ? (
-              <TreeNodeItem
-                node={childNode}
-                parentPath={currentFolderPath}
-                key={id}
-              />
-            ) : null;
-          })}
-        </ul>
-      )}
+      {
+        childrenNodes && (
+            <ul className="w-full rounded-box bg-base-100 pl-4">
+            {childrenNodes.map((childFolder: Folder) => (
+                <TreeNodeItem
+                    node={childFolder}
+                    parentPath={currentFolderPath}
+                    key={childFolder.id}
+                />
+                )
+            )}
+            </ul>
+        )
+      }
     </>
   );
 }

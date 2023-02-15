@@ -10,12 +10,10 @@ import { v4 as uuidv4 } from 'uuid';
 import { useAppSelector, useAppDispatch } from '@/state/hooks';
 import {
   addChild,
-} from '@/state/reducers/chunksSlice';
-import {
-  selectNodes,
-  selectRootNode,
-  selectLastAddedNode,
-} from '@/state/selectors/chunks';
+} from '@/state/reducers/xchunksSlice';
+
+
+import { selectAll, selectById, addFolder } from '@/state/reducers/foldersSlice';
 
 // TYPES
 import { isFolder } from '@/types/typeUtils';
@@ -28,7 +26,9 @@ import Chunk from '@/types/Chunk.type';
 import TreeNodeItem from '@/components/TreeNodeItem';
 import FolderComp from './FolderComp';
 
-import { setAll } from '@/state/reducers/foldersSlice';
+import { RootState } from '@/state/store';
+
+import data from '@/data/index';
 
 const findParents = (nodes: TreeItem, node: Node): Node[] => {
   /* eslint-disable no-restricted-syntax */
@@ -51,11 +51,11 @@ function LeftSidebar() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const nodes = useAppSelector(selectNodes);
-  const rootNode = useAppSelector(selectRootNode);
-  const lastAddedNode = useAppSelector(selectLastAddedNode);
-
-  useEffect(() => {
+  const nodes = useAppSelector(selectAll);
+  const rootNode: Folder | undefined = useAppSelector((state: RootState) => selectById(state, 0));
+  //const lastAddedNode = useAppSelector(selectLastAddedNode);
+console.log(nodes);
+  /*useEffect(() => {
     if (lastAddedNode) {
       const parents = findParents(nodes, lastAddedNode);
       parents.pop();
@@ -68,16 +68,17 @@ function LeftSidebar() {
 
       navigate(path);
     }
-  }, [lastAddedNode]);
+  }, [lastAddedNode])*/
 
   const onAddFolderClick = () => {
     const id = uuidv4();
     dispatch(
-      addChild({
+      addFolder({
         id,
         name: 'New Node',
+        parentId: null,
         active: false,
-        editing: true,
+        editing: false,
         childIds: [],
         slug: id,
       } as Folder),
@@ -99,11 +100,9 @@ function LeftSidebar() {
     dispatch(addChild(node));
   };
 
-  dispatch(setAll(nodes));
-
   return (
     <div className="drawer-side">
-      <FolderComp />
+      
       {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
       <label htmlFor="left-sidebar-drawer" className="drawer-overlay" />
       <div className="bg-base-200 w-80 p-5 h-full">
@@ -125,15 +124,8 @@ function LeftSidebar() {
             </button>
           </div>
 
-          <ul className="menu menu-vertical flex-1 ">
-            {rootNode.childIds.map((key: string) => (
-              <TreeNodeItem
-                node={nodes[key]}
-                parentPath="/view"
-                key={`top-${key}`}
-              />
-            ))}
-          </ul>
+          <FolderComp />
+          
         </div>
       </div>
     </div>

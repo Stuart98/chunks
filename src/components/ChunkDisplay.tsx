@@ -6,7 +6,7 @@ import Editor from '@monaco-editor/react';
 
 // STATE
 import { useAppDispatch } from '@/state/hooks';
-import { updateNode } from '@/state/reducers/chunksSlice';
+import { updateNode } from '@/state/reducers/xchunksSlice';
 
 // TYPES
 import { isChunk } from '@/types/typeUtils';

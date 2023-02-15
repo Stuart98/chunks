@@ -5,12 +5,12 @@ import { lazy } from 'react';
 import Route from '@/types/Route.type';
 
 // COMPONENTS
-const ChunkDisplay = lazy(() => import('@/components/ChunkDisplay'));
+const ChunkLayout = lazy(() => import('@/layouts/ChunkLayout'));
 
 const routes = [
     {
       path: '/view/*', // the url
-      component: ChunkDisplay, // view rendered
+      component: ChunkLayout, // view rendered
     } as Route,
 ] as Route[];
 

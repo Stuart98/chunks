@@ -1,15 +1,30 @@
 import { useSelector
 } from "react-redux";
 
-import { selectAll } from "@/state/reducers/foldersSlice";
+import { selectFolderByParentId } from "@/state/reducers/foldersSlice";
+
+
+
+import Folder from "@/types/Folder.type";
+
+import TreeNodeItem from '@/components/TreeNodeItem';
+
 
 function FolderComp() {
-    
-    const folders = useSelector(selectAll);
+    const folders = useSelector(state => selectFolderByParentId(state, null));
 
-    console.log(folders)
     return (
-        <div>test</div>
+        <>
+        <ul className="menu menu-vertical flex-1 ">
+            {folders && folders.map((folder: Folder) => (
+              <TreeNodeItem
+                node={folder}
+                parentPath="/view"
+                key={`top-${folder.id}`}
+              />
+            ))}
+          </ul>
+        </>
     );
 }
 
