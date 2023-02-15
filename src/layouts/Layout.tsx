@@ -2,7 +2,10 @@ import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 
 import { useAppDispatch } from '@/state/hooks';
-import { makeFolderActive, makeChunkActive } from '@/state/reducers/activeSlice';
+import {
+    makeFolderActive,
+    makeChunkActive,
+} from '@/state/reducers/activeSlice';
 
 import { getChunkFromRoute, getFolderFromRoute } from '@/util/route';
 
@@ -16,23 +19,22 @@ function Layout() {
     useEffect(() => {
         const params = location.pathname.replace(/^(\/view\/)/, '');
         const spl = params.split('/');
-debugger
+
         dispatch(makeFolderActive(spl[0]));
         dispatch(makeChunkActive(spl[1]));
-    
-    }, [location, dispatch])
+    }, [location, dispatch]);
 
-  return (
-    <div data-theme="emerald" className="drawer drawer-mobile bg-base-200">
-      <input
-        id="left-sidebar-drawer"
-        type="checkbox"
-        className="drawer-toggle"
-      />
-      <PageContent />
-      <LeftSidebar />
-    </div>
-  );
+    return (
+        <div data-theme="emerald" className="drawer drawer-mobile bg-base-200">
+            <input
+                id="left-sidebar-drawer"
+                type="checkbox"
+                className="drawer-toggle"
+            />
+            <PageContent />
+            <LeftSidebar />
+        </div>
+    );
 }
 
 export default Layout;

@@ -8,12 +8,14 @@ import { v4 as uuidv4 } from 'uuid';
 
 // STATE
 import { useAppSelector, useAppDispatch } from '@/state/hooks';
+import { addChild } from '@/state/reducers/xchunksSlice';
+
 import {
-  addChild,
-} from '@/state/reducers/xchunksSlice';
-
-
-import { selectAll, selectById, addFolder } from '@/state/reducers/foldersSlice';
+    selectAll,
+    selectById,
+    addFolder,
+} from '@/state/reducers/foldersSlice';
+import { addChunks } from '@/state/reducers/chunksSlice';
 
 // TYPES
 import { isFolder } from '@/types/typeUtils';
@@ -31,31 +33,33 @@ import { RootState } from '@/state/store';
 import data from '@/data/index';
 
 const findParents = (nodes: TreeItem, node: Node): Node[] => {
-  /* eslint-disable no-restricted-syntax */
-  for (const [, n] of Object.entries(nodes)) {
-    if (
-      n
-            && isFolder(n)
-            && n.childIds
-            && n.childIds.indexOf(node.id) >= 0
-    ) {
-      return [n as Folder, ...findParents(nodes, n)];
+    /* eslint-disable no-restricted-syntax */
+    for (const [, n] of Object.entries(nodes)) {
+        if (
+            n &&
+            isFolder(n) &&
+            n.childIds &&
+            n.childIds.indexOf(node.id) >= 0
+        ) {
+            return [n as Folder, ...findParents(nodes, n)];
+        }
     }
-  }
 
-  return [];
-  /* eslint-enable no-restricted-syntax */
+    return [];
+    /* eslint-enable no-restricted-syntax */
 };
 
 function LeftSidebar() {
-  const dispatch = useAppDispatch();
-  const navigate = useNavigate();
+    const dispatch = useAppDispatch();
+    const navigate = useNavigate();
 
-  const nodes = useAppSelector(selectAll);
-  const rootNode: Folder | undefined = useAppSelector((state: RootState) => selectById(state, 0));
-  //const lastAddedNode = useAppSelector(selectLastAddedNode);
-console.log(nodes);
-  /*useEffect(() => {
+    const nodes = useAppSelector(selectAll);
+    const rootNode: Folder | undefined = useAppSelector((state: RootState) =>
+        selectById(state, 0)
+    );
+    //const lastAddedNode = useAppSelector(selectLastAddedNode);
+    console.log(nodes);
+    /*useEffect(() => {
     if (lastAddedNode) {
       const parents = findParents(nodes, lastAddedNode);
       parents.pop();
@@ -70,66 +74,79 @@ console.log(nodes);
     }
   }, [lastAddedNode])*/
 
-  const onAddFolderClick = () => {
-    const id = uuidv4();
-    dispatch(
-      addFolder({
-        id,
-        name: 'New Node',
-        parentId: null,
-        active: false,
-        editing: false,
-        childIds: [],
-        slug: id,
-      } as Folder),
-    );
-  };
+    const onAddFolderClick = () => {
+        const id = uuidv4();
+        dispatch(
+            addFolder({
+                id,
+                name: 'New Node',
+                parentId: null,
+                active: false,
+                editing: false,
+                childIds: [],
+                slug: id,
+            } as Folder)
+        );
 
-  const onAddChunkClick = () => {
-    const id = uuidv4();
-    const node = {
-      id,
-      name: 'New Node',
-      active: false,
-      editing: true,
-      language: 'plaintext',
-      slug: id,
-      content: id,
-    } as Chunk;
+        // add a dummy chunk
+        const chunkId = uuidv4();
+        dispatch(
+            addChunks([
+                {
+                    id: chunkId,
+                    folderId: id,
+                    name: `My Chunk - ${chunkId}`,
+                    slug: 'project-1-1',
+                    editing: false,
+                    content: 'project 1 content',
+                } as Chunk,
+            ])
+        );
+    };
 
-    dispatch(addChild(node));
-  };
+    const onAddChunkClick = () => {
+        const id = uuidv4();
+        const node = {
+            id,
+            name: 'New Node',
+            active: false,
+            editing: true,
+            language: 'plaintext',
+            slug: id,
+            content: id,
+        } as Chunk;
 
-  return (
-    <div className="drawer-side">
-      
-      {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
-      <label htmlFor="left-sidebar-drawer" className="drawer-overlay" />
-      <div className="bg-base-200 w-80 p-5 h-full">
-        <div className="flex flex-col bg-base-100 rounded-box p-2 h-full shadow-md">
-          <div className="mb-4">
-            <button
-              type="button"
-              className="btn btn-primary btn-circle btn-sm p-1 mr-3"
-              onClick={onAddFolderClick}
-            >
-              <FolderPlusIcon className="w-5 h-5" />
-            </button>
-            <button
-              type="button"
-              className="btn btn-primary btn-circle btn-sm p-1"
-              onClick={onAddChunkClick}
-            >
-              <DocumentPlusIcon className="w-5 h-5" />
-            </button>
-          </div>
+        dispatch(addChild(node));
+    };
 
-          <FolderComp />
-          
+    return (
+        <div className="drawer-side">
+            {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
+            <label htmlFor="left-sidebar-drawer" className="drawer-overlay" />
+            <div className="bg-base-200 w-80 p-5 h-full">
+                <div className="flex flex-col bg-base-100 rounded-box p-2 h-full shadow-md">
+                    <div className="mb-4">
+                        <button
+                            type="button"
+                            className="btn btn-primary btn-circle btn-sm p-1 mr-3"
+                            onClick={onAddFolderClick}
+                        >
+                            <FolderPlusIcon className="w-5 h-5" />
+                        </button>
+                        <button
+                            type="button"
+                            className="btn btn-primary btn-circle btn-sm p-1"
+                            onClick={onAddChunkClick}
+                        >
+                            <DocumentPlusIcon className="w-5 h-5" />
+                        </button>
+                    </div>
+
+                    <FolderComp />
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-  );
+    );
 }
 
 export default LeftSidebar;

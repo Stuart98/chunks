@@ -54,21 +54,6 @@ function TreeNodeItem({ node, parentPath }: TreeNodeItemProps) {
   return (
     <>
       <li className="w-full flex flex-row" onDoubleClick={onDoubleClick}>
-        { 1==2 && <button
-          type="button"
-          className={[
-            'flex-1',
-            'py-1',
-            'rounded-lg',
-            'truncate',
-            node.active ? 'bg-base-content/10' : '',
-          ].join(' ')}
-          onClick={onFolderClick}
-        >
-          <FolderOpenIcon className="shrink-0 w-5" />
-          
-          <EditableNode node={node} onEditComplete={onEditComplete} />
-        </button> }
         <NavLink
           className="flex flex-row flex-1 py-1 rounded-lg truncate"
           to={currentFolderPath}

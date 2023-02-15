@@ -3,7 +3,6 @@ import { createSlice, createSelector, PayloadAction } from '@reduxjs/toolkit';
 // TYPES
 import { RootState } from '../store';
 
-
 export const activeSlice = createSlice({
   name: 'active',
   initialState: {
@@ -28,12 +27,12 @@ export const { makeFolderActive, makeChunkActive } = activeSlice.actions;
 
 export const selectActiveFolderId = createSelector(
     (state: RootState) => state.activeFolderId,
-    (activeFolderId) => activeFolderId
+    (activeFolderId) => activeFolderId,
 );
 
 export const selectActiveChunkId = createSelector(
     (state: RootState) => state.activeChunkId,
-    (activeChunkId) => activeChunkId
+    (activeChunkId) => activeChunkId,
 );
 
 export default activeSlice.reducer;

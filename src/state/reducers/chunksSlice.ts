@@ -1,9 +1,13 @@
-import { createSlice, createEntityAdapter, createSelector } from '@reduxjs/toolkit';
+import {
+  createSlice,
+  createEntityAdapter,
+  createSelector,
+  EntityState ,
+} from '@reduxjs/toolkit';
 
 // TYPES
 import Chunk from '@/types/Chunk.type';
-import { RootState } from '../store';
-import data from '@/data/chunks';
+import { RootState } from '@/state/store';
 
 const chunksAdapter = createEntityAdapter<Chunk>({
   selectId: (chunk) => chunk.id,
@@ -16,36 +20,28 @@ export const chunksSlice = createSlice({
   initialState: chunksAdapter.getInitialState(),
   reducers: {
     setAll: chunksAdapter.setAll,
+    addChunks: chunksAdapter.addMany,
+
+    updateChunk: chunksAdapter.updateOne,
   },
 });
-
 
 // Selectors
 export const { selectAll, selectById, selectEntities } = chunksAdapter.getSelectors((state: RootState) => state.chunks);
 
-// export const selectByParent = (state: RootState, folderId: string) => selectEntities(state).find((c) => c.parentId === folderId) : [];
-
-export const xselectChunksByFolderId = createSelector([selectAll, (items, folderId: string) => folderId], (items, folderId) => {
-    return items.filter((i) => i.folderId === folderId);
-});
-
 export const selectChunksByFolderId = createSelector(
-    [
-        (state: RootState) => state.chunks,
-        (chunks: Chunk[], folderId) => folderId
-    ],
-    (entities: Chunk[], folderId: string) => {
-        return Object.values(entities.entities).filter(entity => entity.folderId === folderId);
-    }
+  [
+    (state: RootState) => state.chunks,
+    (chunks: EntityState<Chunk>, folderId: string) => folderId,
+  ],
+  (entities: EntityState<Chunk>, folderId: string) => Object.values(entities.entities).filter((entity: Chunk | undefined) => entity?.folderId === folderId) || [], // eslint-disable-line max-len
 );
 
 export const selectChunkBySlug = createSelector(
-    (state: RootState) => state.chunks,
-    (entities: Chunk[], slug: string) => Object.values(entities).find(entity => entity.slug === slug)
+  (state: RootState) => state.chunks,
+  (entities: Chunk[], slug: string) => Object.values(entities).find((entity: Chunk) => entity.slug === slug) || [],
 );
-  
 
-
-export const { setAll } = chunksSlice.actions;
+export const { setAll, addChunks, updateChunk } = chunksSlice.actions;
 
 export default chunksSlice.reducer;

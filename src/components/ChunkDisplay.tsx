@@ -5,84 +5,89 @@ import { useRef, useEffect } from 'react';
 import Editor from '@monaco-editor/react';
 
 // STATE
-import { useAppDispatch } from '@/state/hooks';
-import { updateNode } from '@/state/reducers/xchunksSlice';
+import { useAppDispatch, useAppSelector } from '@/state/hooks';
+import { selectById, updateChunk } from '@/state/reducers/chunksSlice';
+import { selectActiveChunkId } from '@/state/reducers/activeSlice';
 
 // TYPES
 import { isChunk } from '@/types/typeUtils';
 import Chunk from '@/types/Chunk.type';
 
 // UTILS
-import { getChunkFromRoute } from '@/util/route';
 import configureMonaco from '@/monaco/configureMonaco';
 
 // COMPONENTS
 import ChunkToolbar from '@/components/ChunkToolbar';
 
 export default function ChunkDisplay() {
-  const dispatch = useAppDispatch();
+    const dispatch = useAppDispatch();
 
-  const chunk = getChunkFromRoute();
+    const chunkId: string = useAppSelector((state) =>
+        selectActiveChunkId(state.active)
+    );
+    const chunk: Chunk = useAppSelector((state) => selectById(state, chunkId));
 
-  const editorRef = useRef(null);
-  const monacoRef = useRef(null);
-  const prevChunk = useRef(chunk);
+    const editorRef = useRef(null);
+    const monacoRef = useRef(null);
+    const prevChunk = useRef(chunk);
 
-  let allowChangeEvent = true;
+    let allowChangeEvent = true;
 
-  const onEditorChange = (value: string | undefined) => {
-    if (chunk && allowChangeEvent) {
-      dispatch(
-        updateNode({
-          ...chunk,
-          content: value || '',
-        }),
-      );
-    }
-  };
+    const onEditorChange = (value: string | undefined) => {
+        if (chunk && allowChangeEvent) {
+            dispatch(
+                updateChunk({
+                    id: chunk.id,
+                    changes: {
+                        content: value || '',
+                    },
+                })
+            );
+        }
+    };
 
-  const updateEditorContent = (editorChunk: Chunk) => {
-    if (
-      editorChunk
-            && isChunk(editorChunk)
-            && editorRef.current
-            && monacoRef.current
-    ) {
-      const editor = editorRef.current as any;
-      const monacoEditor = (monacoRef.current as any).editor as any;
+    const updateEditorContent = (editorChunk: Chunk) => {
+        if (
+            editorChunk &&
+            isChunk(editorChunk) &&
+            editorRef.current &&
+            monacoRef.current
+        ) {
+            const editor = editorRef.current as any;
+            const monacoEditor = (monacoRef.current as any).editor as any;
 
-      allowChangeEvent = false;
+            allowChangeEvent = false;
 
-      if (editor.getModel()) {
-        editor.getModel().setValue(editorChunk.content);
-        monacoEditor.setModelLanguage(
-          editor.getModel(),
-          editorChunk.language,
-        );
-      }
+            if (editor.getModel()) {
+                editor.getModel().setValue(editorChunk.content);
+                monacoEditor.setModelLanguage(
+                    editor.getModel(),
+                    editorChunk.language
+                );
+            }
 
-      allowChangeEvent = true;
-    }
-  };
+            allowChangeEvent = true;
+        }
+    };
 
-  const handleEditorDidMount = (editor: any, monaco: any) => {
-    editorRef.current = editor;
-    monacoRef.current = monaco;
+    const handleEditorDidMount = (editor: any, monaco: any) => {
+        editorRef.current = editor;
+        monacoRef.current = monaco;
 
-    updateEditorContent(chunk as Chunk);
-  };
+        updateEditorContent(chunk as Chunk);
+    };
 
-  useEffect(() => {
-    // update the content if we've changed chunk, and it hasn't just changed with the content save
-    if (
-      !prevChunk.current
-            || (chunk && prevChunk.current.id !== chunk.id)
-    ) {
-      prevChunk.current = chunk;
+    useEffect(() => {
+        // update the content if we've changed chunk, and it hasn't just changed with the content save
+        if (
+            !prevChunk.current ||
+            (chunk && prevChunk.current.id !== chunk.id)
+        ) {
+            prevChunk.current = chunk;
 
-      updateEditorContent(chunk as Chunk);
-    }
-  }, [chunk]);
+            updateEditorContent(chunk as Chunk);
+        }
+    }, [chunk]);
 
     useEffect(() => {
         if (chunk) {
@@ -90,28 +95,28 @@ export default function ChunkDisplay() {
         }
     }, [(chunk as Chunk)?.language]);
 
-  return (
-    <div className="flex flex-col flex-1 pb-5 px-6 overflow-hidden">
-      {chunk && isChunk(chunk) && (
-        <>
-          <ChunkToolbar chunk={chunk} />
-          <Editor
-            theme="chunks-dark"
-            defaultLanguage={
-              chunk && chunk.language && chunk.language
-                ? chunk.language
-                : 'plaintext'
-            }
-            options={{
-              fontSize: 18,
-              minimap: { enabled: false },
-            }}
-            onChange={onEditorChange}
-            onMount={handleEditorDidMount}
-            beforeMount={configureMonaco}
-          />
-        </>
-      )}
-    </div>
-  );
+    return (
+        <div className="h-full flex flex-col flex-1 pb-5 px-6 overflow-hidden">
+            {chunk && isChunk(chunk) && (
+                <>
+                    <ChunkToolbar chunk={chunk} />
+                    <Editor
+                        theme="chunks-dark"
+                        defaultLanguage={
+                            chunk && chunk.language && chunk.language
+                                ? chunk.language
+                                : 'plaintext'
+                        }
+                        options={{
+                            fontSize: 18,
+                            minimap: { enabled: false },
+                        }}
+                        onChange={onEditorChange}
+                        onMount={handleEditorDidMount}
+                        beforeMount={configureMonaco}
+                    />
+                </>
+            )}
+        </div>
+    );
 }

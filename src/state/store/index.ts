@@ -12,7 +12,6 @@ import {
 
 const store = configureStore({
   reducer: {
-    //chunks: chunksReducer,
     folders: foldersReducer,
     chunks: chunksSlice,
     active: activeSlice,
