@@ -2,16 +2,17 @@ import {
     createSlice,
     createEntityAdapter,
     createSelector,
+    createAsyncThunk,
     PayloadAction,
     Draft,
-    EntityState,
 } from '@reduxjs/toolkit';
 
 // TYPES
 import Folder from '@/types/Folder.type';
 
 // STATE
-import type { RootState } from '../store';
+import type { RootState } from '@/state/store';
+import { removeChunksByFolderId } from '@/state/reducers/chunksSlice';
 
 const foldersAdapter = createEntityAdapter<Folder>({
     selectId: (folder) => folder.id,
@@ -57,8 +58,22 @@ const foldersSlice = createSlice({
         },
 
         addFolder: foldersAdapter.addOne,
+        removeOne: (state, { payload: folderId }: PayloadAction<string>) => {
+            foldersAdapter.removeOne(state, folderId);
+        },
     },
 });
+
+export const removeFolder = createAsyncThunk(
+    'folders/removeFolder',
+    async (folderId: string, { dispatch }) => {
+        // remove folder
+        dispatch(foldersSlice.actions.removeOne(folderId));
+
+        // remove all chunks associated with folder
+        dispatch(removeChunksByFolderId(folderId));
+    }
+);
 
 // Selectors
 export const { selectAll, selectById } = foldersAdapter.getSelectors(

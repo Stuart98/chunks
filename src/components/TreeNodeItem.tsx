@@ -17,6 +17,7 @@ import EditableNode from '@/components/EditableNode';
 import {
     startEdit,
     completeEdit,
+    removeFolder,
     selectFolderByParentId,
 } from '@/state/reducers/foldersSlice';
 
@@ -26,7 +27,6 @@ interface TreeNodeItemProps {
 }
 
 function TreeNodeItem({ node, parentPath }: TreeNodeItemProps) {
-    const navigate = useNavigate();
     const dispatch = useDispatch();
 
     const childrenNodes: Folder[] = useAppSelector((state) =>
@@ -34,13 +34,8 @@ function TreeNodeItem({ node, parentPath }: TreeNodeItemProps) {
     );
     const currentFolderPath = `${parentPath}/${node.id}`;
 
-    const onFolderClick = () => {
-        // dispatch(makeActive(node.id));
-    };
-
     const onDeleteClick = () => {
-        // navigate(parentPath);
-        // dispatch(removeNode(node.id));
+        dispatch(removeFolder(node.id));
     };
 
     const onDoubleClick = () => {
