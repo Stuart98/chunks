@@ -3,6 +3,8 @@ import {
     createEntityAdapter,
     createSelector,
     PayloadAction,
+    Draft,
+    EntityState,
 } from '@reduxjs/toolkit';
 
 // TYPES
@@ -29,13 +31,12 @@ const foldersSlice = createSlice({
     reducers: {
         setAll: foldersAdapter.setAll,
 
-        startEdit: (
-            state,
-            { payload: folderId }: PayloadAction<string>
-        ) => {
-            Object.values(state.entities as Folder[]).forEach(
-                (folder: Folder) => {
-                    folder.editing = folder.id === folderId;
+        startEdit: (state, { payload: folderId }: PayloadAction<string>) => {
+            Object.values(state.entities).forEach(
+                (folder: Draft<Folder> | undefined) => {
+                    if (folder) {
+                        folder.editing = folder.id === folderId;
+                    }
                 }
             );
         },
@@ -69,11 +70,11 @@ export const selectActive = createSelector([selectAll], (items) =>
 );
 
 export const selectFolderByParentId = createSelector(
-    [selectAll, (items: Folder[], parentId: string | null) => parentId],
+    [selectAll, (_, parentId: string | null) => parentId],
     (items, parentId) => items.filter((i) => i.parentId === parentId)
 );
 
-export const { setAll, makeActive, addFolder, startEdit, completeEdit } =
+export const { setAll, addFolder, startEdit, completeEdit } =
     foldersSlice.actions;
 
 export default foldersSlice.reducer;

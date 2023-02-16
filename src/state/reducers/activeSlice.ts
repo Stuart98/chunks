@@ -3,12 +3,17 @@ import { createSlice, createSelector, PayloadAction } from '@reduxjs/toolkit';
 // TYPES
 import type { RootState } from '../store';
 
+type ActiveState = {
+    activeFolderId: string | null;
+    activeChunkId: string | null;
+};
+
 const activeSlice = createSlice({
     name: 'active',
     initialState: {
         activeFolderId: null,
         activeChunkId: null,
-    },
+    } as ActiveState,
     reducers: {
         makeFolderActive: (
             state,
@@ -30,12 +35,12 @@ const activeSlice = createSlice({
 export const { makeFolderActive, makeChunkActive } = activeSlice.actions;
 
 export const selectActiveFolderId = createSelector(
-    (state: RootState) => state.activeFolderId,
+    (state: RootState) => state.active.activeFolderId,
     (activeFolderId) => activeFolderId
 );
 
 export const selectActiveChunkId = createSelector(
-    (state: RootState) => state.activeChunkId,
+    (state: RootState) => state.active.activeChunkId,
     (activeChunkId) => activeChunkId
 );
 

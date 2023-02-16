@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 import Chunk from '@/types/Chunk.type';
 
 import { useAppSelector, useAppDispatch } from '@/state/hooks';
+import type { RootState } from '@/state/store';
 import {
     selectChunksByFolderId,
     addChunks,
@@ -14,10 +15,8 @@ import { selectActiveFolderId } from '@/state/reducers/activeSlice';
 
 function ChunkList() {
     const dispatch = useAppDispatch();
-    const folderId: string = useAppSelector((state) =>
-        selectActiveFolderId(state.active)
-    );
-    const chunks = useAppSelector((state) =>
+    const folderId = useAppSelector((state) => selectActiveFolderId(state));
+    const chunks = useAppSelector((state: RootState) =>
         selectChunksByFolderId(state, folderId)
     );
 

@@ -21,10 +21,8 @@ import ChunkToolbar from '@/components/ChunkToolbar';
 export default function ChunkDisplay() {
     const dispatch = useAppDispatch();
 
-    const chunkId: string = useAppSelector((state) =>
-        selectActiveChunkId(state.active)
-    );
-    const chunk = useAppSelector((state) => selectById(state, chunkId));
+    const chunkId = useAppSelector((state) => selectActiveChunkId(state));
+    const chunk = useAppSelector((state) => selectById(state, chunkId || ''));
 
     const editorRef = useRef(null);
     const monacoRef = useRef(null);
