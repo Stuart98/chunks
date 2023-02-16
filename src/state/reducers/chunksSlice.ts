@@ -2,14 +2,12 @@ import {
     createSlice,
     createEntityAdapter,
     createSelector,
-    createAsyncThunk,
     EntityId,
 } from '@reduxjs/toolkit';
 
 // TYPES
 import Chunk from '@/types/Chunk.type';
 import type { RootState } from '@/state/store';
-
 
 const chunksAdapter = createEntityAdapter<Chunk>({
     selectId: (chunk) => chunk.id,
@@ -18,20 +16,18 @@ const chunksAdapter = createEntityAdapter<Chunk>({
 
 const chunksSlice = createSlice({
     name: 'chunks',
-    // `createSlice` will infer the state type from the `initialState` argument
     initialState: chunksAdapter.getInitialState(),
     reducers: {
         setAll: chunksAdapter.setAll,
         addChunks: chunksAdapter.addMany,
         updateChunk: chunksAdapter.updateOne,
+        removeChunk: chunksAdapter.removeOne,
 
         removeChunksByFolderId: (
             state,
             { payload: folderId }: { payload: string }
         ) => {
-            debugger
             const ids = Object.values(state.entities)
-                .filter((chunk) => chunk !== undefined)
                 .filter((chunk) => chunk?.folderId === folderId)
                 .map((chunk) => chunk?.id);
 
@@ -51,7 +47,7 @@ export const selectChunksByFolderId = createSelector(
     (items, folderId) => items.filter((i) => i.folderId === folderId)
 );
 
-export const { setAll, addChunks, updateChunk, removeChunksByFolderId } =
+export const { setAll, addChunks, updateChunk, removeChunk, removeChunksByFolderId } =
     chunksSlice.actions;
 
 export default chunksSlice.reducer;

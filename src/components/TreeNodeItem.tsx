@@ -55,7 +55,7 @@ function TreeNodeItem({ node, parentPath }: TreeNodeItemProps) {
         <>
             <li className="w-full flex flex-row" onDoubleClick={onDoubleClick}>
                 <NavLink
-                    className="flex flex-row flex-1 py-1 rounded-lg truncate"
+                    className="flex flex-row flex-1 py-1 mr-2 rounded-lg truncate"
                     to={currentFolderPath}
                 >
                     <FolderOpenIcon className="shrink-0 w-5" />
