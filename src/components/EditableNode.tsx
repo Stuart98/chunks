@@ -2,18 +2,16 @@
 import React, { useState } from 'react';
 
 // STATE
-import { useAppDispatch } from '@/state/hooks';
-import { completeEdit } from '@/state/reducers/chunksSlice';
 
 // TYPES
 import Node from '@/types/Node.type';
 
 interface EditableNodeProps {
     node: Node;
+    onEditComplete: Function;
 }
 
-function EditableNode({ node }: EditableNodeProps) {
-  const dispatch = useAppDispatch();
+function EditableNode({ node, onEditComplete }: EditableNodeProps) {
 
   const [nameEditValue, setNameEditValue] = useState(node.name);
 
@@ -28,12 +26,7 @@ function EditableNode({ node }: EditableNodeProps) {
   };
 
   const onEditBlur = () => {
-    dispatch(
-      completeEdit({
-        id: node.id,
-        value: nameEditValue,
-      }),
-    );
+    onEditComplete && onEditComplete(nameEditValue);
   };
 
   /* eslint-disable react/jsx-no-useless-fragment, jsx-a11y/no-autofocus */

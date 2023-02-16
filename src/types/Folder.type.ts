@@ -2,7 +2,7 @@ interface Folder {
     id: string;
     name: string;
     slug: string;
-    childIds: string[];
+    parentId: string | null;
     active: boolean;
     editing: boolean;
 }

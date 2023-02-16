@@ -3,7 +3,7 @@
         "browser": true,
         "es2021": true
     },
-    "extends": ["plugin:react/recommended", "airbnb"],
+    "extends": ["plugin:react/recommended", "airbnb", "prettier"],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
         "ecmaFeatures": {
@@ -12,8 +12,9 @@
         "ecmaVersion": "latest",
         "sourceType": "module"
     },
-    "plugins": ["import", "react", "@typescript-eslint"],
+    "plugins": ["import", "react", "@typescript-eslint", "prettier"],
     "rules": {
+        "prettier/prettier": "error",
         "react/jsx-filename-extension": [1, { "extensions": [".jsx", ".tsx"] }],
         "react/react-in-jsx-scope": "off",
         "import/extensions": [
@@ -29,7 +30,8 @@
         ],
         "max-len": ["error", { "code": 125 }],
         "no-unused-vars": "off",
-        "@typescript-eslint/no-unused-vars": ["error"]
+        "@typescript-eslint/no-unused-vars": ["error"],
+        "no-param-reassign": ["error", { "props": false }]
     },
     "settings": {
         "import/parsers": {

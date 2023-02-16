@@ -1,107 +1,87 @@
 // REACT
 import { NavLink, useNavigate } from 'react-router-dom';
 import {
-  FolderOpenIcon,
-  DocumentIcon,
-  TrashIcon,
+    FolderOpenIcon,
+    DocumentIcon,
+    TrashIcon,
 } from '@heroicons/react/24/outline';
-
+import { useDispatch } from 'react-redux';
 // STATE
 import { useAppSelector, useAppDispatch } from '@/state/hooks';
-import {
-  makeActive,
-  removeNode,
-  startEdit,
-} from '@/state/reducers/chunksSlice';
-import { selectNodeById } from '@/state/selectors/chunks';
 
 // TYPES
-import { isFolder } from '@/types/typeUtils';
-import Node from '@/types/Node.type';
+import Folder from '@/types/Folder.type';
 
 // COMPONENTS
 import EditableNode from '@/components/EditableNode';
+import {
+    startEdit,
+    completeEdit,
+    removeFolder,
+    selectFolderByParentId,
+} from '@/state/reducers/foldersSlice';
 
 interface TreeNodeItemProps {
-    node: Node;
+    node: Folder;
     parentPath: string;
 }
 
 function TreeNodeItem({ node, parentPath }: TreeNodeItemProps) {
-  const navigate = useNavigate();
-  const dispatch = useAppDispatch();
+    const dispatch = useDispatch();
 
-  const doSelectNodeById = useAppSelector(selectNodeById);
-  const currentFolderPath = `${parentPath}/${node.slug}`;
+    const childrenNodes: Folder[] = useAppSelector((state) =>
+        selectFolderByParentId(state, node.id)
+    );
+    const currentFolderPath = `${parentPath}/${node.id}`;
 
-  const onFolderClick = () => {
-    if (isFolder(node)) {
-      dispatch(makeActive(node));
-    }
-  };
+    const onDeleteClick = () => {
+        dispatch(removeFolder(node.id));
+    };
 
-  const onDeleteClick = () => {
-    navigate(parentPath);
+    const onDoubleClick = () => {
+        dispatch(startEdit(node.id));
+    };
 
-    dispatch(removeNode(node.id));
-  };
+    const onEditComplete = (value: string) => {
+        dispatch(
+            completeEdit({
+                folderId: node.id,
+                value,
+            })
+        );
+    };
 
-  const onDoubleClick = () => {
-    dispatch(startEdit(node.id));
-  };
-
-  return (
-    <>
-      <li className="w-full flex flex-row" onDoubleClick={onDoubleClick}>
-        {isFolder(node) && (
-        <button
-          type="button"
-          className={[
-            'flex-1',
-            'py-1',
-            'rounded-lg',
-            'truncate',
-            node.active ? 'bg-base-content/10' : '',
-          ].join(' ')}
-          onClick={onFolderClick}
-        >
-          <FolderOpenIcon className="shrink-0 w-5" />
-          <EditableNode node={node} />
-        </button>
-        )}
-        {!isFolder(node) && (
-        <NavLink
-          className="flex flex-row flex-1 py-1 rounded-lg truncate"
-          to={currentFolderPath}
-        >
-          <DocumentIcon className="shrink-0 w-5" />
-          <EditableNode node={node} />
-        </NavLink>
-        )}
-        <button
-          type="button"
-          className="p-2 w-8 rounded-full"
-          onClick={onDeleteClick}
-        >
-          <TrashIcon className="w-4" />
-        </button>
-      </li>
-      {isFolder(node) && node.childIds && (
-        <ul className="w-full rounded-box bg-base-100 pl-4">
-          {node.childIds.map((id: string) => {
-            const childNode = doSelectNodeById(id);
-            return childNode ? (
-              <TreeNodeItem
-                node={childNode}
-                parentPath={currentFolderPath}
-                key={id}
-              />
-            ) : null;
-          })}
-        </ul>
-      )}
-    </>
-  );
+    return (
+        <>
+            <li className="w-full flex flex-row" onDoubleClick={onDoubleClick}>
+                <NavLink
+                    className="flex flex-row flex-1 py-1 mr-2 rounded-lg truncate"
+                    to={currentFolderPath}
+                >
+                    <FolderOpenIcon className="shrink-0 w-5" />
+                    <EditableNode node={node} onEditComplete={onEditComplete} />
+                </NavLink>
+                <button
+                    type="button"
+                    className="p-2 w-8 rounded-full"
+                    onClick={onDeleteClick}
+                >
+                    <TrashIcon className="w-4" />
+                </button>
+            </li>
+            {childrenNodes && (
+                <ul className="w-full rounded-box bg-base-100 pl-4">
+                    {childrenNodes.map((childFolder: Folder) => (
+                        <TreeNodeItem
+                            node={childFolder}
+                            parentPath={currentFolderPath}
+                            key={childFolder.id}
+                        />
+                    ))}
+                </ul>
+            )}
+        </>
+    );
 }
 
 export default TreeNodeItem;
