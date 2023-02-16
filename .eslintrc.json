@@ -30,7 +30,8 @@
         ],
         "max-len": ["error", { "code": 125 }],
         "no-unused-vars": "off",
-        "@typescript-eslint/no-unused-vars": ["error"]
+        "@typescript-eslint/no-unused-vars": ["error"],
+        "no-param-reassign": ["error", { "props": false }]
     },
     "settings": {
         "import/parsers": {

@@ -7,8 +7,6 @@ import {
     makeChunkActive,
 } from '@/state/reducers/activeSlice';
 
-import { getChunkFromRoute, getFolderFromRoute } from '@/util/route';
-
 import PageContent from '@/layouts/PageContent';
 import LeftSidebar from '@/layouts/LeftSidebar';
 

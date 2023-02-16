@@ -10,7 +10,6 @@ import { selectById, updateChunk } from '@/state/reducers/chunksSlice';
 import { selectActiveChunkId } from '@/state/reducers/activeSlice';
 
 // TYPES
-import { isChunk } from '@/types/typeUtils';
 import Chunk from '@/types/Chunk.type';
 
 // UTILS
@@ -25,7 +24,7 @@ export default function ChunkDisplay() {
     const chunkId: string = useAppSelector((state) =>
         selectActiveChunkId(state.active)
     );
-    const chunk: Chunk = useAppSelector((state) => selectById(state, chunkId));
+    const chunk = useAppSelector((state) => selectById(state, chunkId));
 
     const editorRef = useRef(null);
     const monacoRef = useRef(null);
@@ -47,12 +46,7 @@ export default function ChunkDisplay() {
     };
 
     const updateEditorContent = (editorChunk: Chunk) => {
-        if (
-            editorChunk &&
-            isChunk(editorChunk) &&
-            editorRef.current &&
-            monacoRef.current
-        ) {
+        if (editorChunk && editorRef.current && monacoRef.current) {
             const editor = editorRef.current as any;
             const monacoEditor = (monacoRef.current as any).editor as any;
 
@@ -97,7 +91,7 @@ export default function ChunkDisplay() {
 
     return (
         <div className="h-full flex flex-col flex-1 pb-5 px-6 overflow-hidden">
-            {chunk && isChunk(chunk) && (
+            {chunk && (
                 <>
                     <ChunkToolbar chunk={chunk} />
                     <Editor

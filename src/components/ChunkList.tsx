@@ -17,9 +17,9 @@ function ChunkList() {
     const folderId: string = useAppSelector((state) =>
         selectActiveFolderId(state.active)
     );
-    const chunks: Chunk[] | undefined =
-        useAppSelector((state) => selectChunksByFolderId(state, folderId)) ||
-        ([] as Chunk[]);
+    const chunks = useAppSelector((state) =>
+        selectChunksByFolderId(state, folderId)
+    );
 
     const onAddChunkClick = () => {
         const chunkId = uuidv4();
@@ -50,17 +50,20 @@ function ChunkList() {
             </div>
             <ul className="menu menu-vertical">
                 {chunks &&
-                    chunks.map((c: Chunk) => (
-                        <li key={c.id}>
-                            <NavLink
-                                className="flex flex-row flex-1 py-1 rounded-lg truncate"
-                                to={`/view/${c.folderId}/${c.id}`}
-                            >
-                                <DocumentIcon className="shrink-0 w-5" />
-                                {c.name}
-                            </NavLink>
-                        </li>
-                    ))}
+                    chunks.map(
+                        (chunk: Chunk | undefined) =>
+                            chunk && (
+                                <li key={chunk.id}>
+                                    <NavLink
+                                        className="flex flex-row flex-1 py-1 rounded-lg truncate"
+                                        to={`/view/${chunk.folderId}/${chunk.id}`}
+                                    >
+                                        <DocumentIcon className="shrink-0 w-5" />
+                                        {chunk.name}
+                                    </NavLink>
+                                </li>
+                            )
+                    )}
             </ul>
         </div>
     );
