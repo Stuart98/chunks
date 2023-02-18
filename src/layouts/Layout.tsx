@@ -4,9 +4,10 @@ import { useLocation } from 'react-router-dom';
 import { useAppDispatch } from '@/state/hooks';
 import {
     makeFolderActive,
+} from '@/features/folders/foldersSlice';
+import {
     makeChunkActive,
-} from '@/state/reducers/activeSlice';
-
+} from '@/features/chunksList/chunksSlice';
 import PageContent from '@/layouts/PageContent';
 import LeftSidebar from '@/layouts/LeftSidebar';
 

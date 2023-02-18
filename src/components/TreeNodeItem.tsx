@@ -19,7 +19,7 @@ import {
     completeEdit,
     removeFolder,
     selectFolderByParentId,
-} from '@/state/reducers/foldersSlice';
+} from '@/features/folders/foldersSlice';
 
 interface TreeNodeItemProps {
     node: Folder;

@@ -2,8 +2,8 @@ import { configureStore } from '@reduxjs/toolkit';
 
 // STATE
 // import chunksReducer from '@/state/reducers/xchunksSlice';
-import foldersReducer from '@/state/reducers/foldersSlice';
-import chunksReducer from '@/state/reducers/chunksSlice';
+import foldersReducer from '@/features/folders/foldersSlice';
+import chunksReducer from '@/features/chunksList/chunksSlice';
 import activeReducer from '@/state/reducers/activeSlice';
 import {
     localStorageMiddleware,

@@ -11,8 +11,8 @@ import {
 import Folder from '@/types/Folder.type';
 
 // STATE
-import type { RootState } from '@/state/store';
-import { removeChunksByFolderId } from '@/state/reducers/chunksSlice';
+import type { RootState } from '@/app/store';
+import { removeChunksByFolderId } from '@/features/chunksList/chunksSlice';
 
 const foldersAdapter = createEntityAdapter<Folder>({
     selectId: (folder) => folder.id,
@@ -25,12 +25,25 @@ const generateSlug = (name: string) =>
         .replace(/[^\w ]+/g, '')
         .replace(/ +/g, '-');
 
+type StateType = {
+    activeFolderId: string | null;
+}
+
 const foldersSlice = createSlice({
     name: 'folders',
     // `createSlice` will infer the state type from the `initialState` argument
-    initialState: foldersAdapter.getInitialState(),
+    initialState: foldersAdapter.getInitialState({
+        activeFolderId: null,
+    } as StateType),
     reducers: {
         setAll: foldersAdapter.setAll,
+
+        makeFolderActive: (
+            state,
+            { payload: folderId }: PayloadAction<string>
+        ) => {
+            state.activeFolderId = folderId;
+        },
 
         startEdit: (state, { payload: folderId }: PayloadAction<string>) => {
             Object.values(state.entities).forEach(
@@ -89,7 +102,7 @@ export const selectFolderByParentId = createSelector(
     (items, parentId) => items.filter((i) => i.parentId === parentId)
 );
 
-export const { setAll, addFolder, startEdit, completeEdit } =
+export const { setAll, addFolder, startEdit, completeEdit, makeFolderActive } =
     foldersSlice.actions;
 
 export default foldersSlice.reducer;

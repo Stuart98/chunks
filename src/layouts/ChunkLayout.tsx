@@ -1,5 +1,5 @@
 import ChunkDisplay from '@/components/ChunkDisplay';
-import ChunkList from '@/components/ChunkList';
+import ChunkList from '@/features/chunksList/ChunkList';
 
 function ChunkLayout() {
     return (

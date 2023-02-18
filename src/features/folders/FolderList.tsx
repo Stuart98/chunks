@@ -1,6 +1,6 @@
 import { useSelector } from 'react-redux';
 
-import { selectFolderByParentId } from '@/state/reducers/foldersSlice';
+import { selectFolderByParentId } from '@/features/folders/foldersSlice';
 
 import Folder from '@/types/Folder.type';
 

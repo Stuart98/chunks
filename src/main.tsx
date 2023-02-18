@@ -3,7 +3,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 
 // COMPONENTS
-import App from '@/App';
+import App from '@/app/App';
 
 // CSS
 import '@/index.css';

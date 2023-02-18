@@ -9,15 +9,15 @@ import { v4 as uuidv4 } from 'uuid';
 // STATE
 import { useAppDispatch } from '@/state/hooks';
 
-import { addFolder } from '@/state/reducers/foldersSlice';
-import { addChunks } from '@/state/reducers/chunksSlice';
+import { addFolder } from '@/features/folders/foldersSlice';
+import { addChunks } from '@/features/chunksList/chunksSlice';
 
 // TYPES
 import Folder from '@/types/Folder.type';
 import Chunk from '@/types/Chunk.type';
 
 // COMPONENTS
-import FolderList from '../components/FolderList';
+import FolderList from '@/features/folders/FolderList';
 
 function LeftSidebar() {
     const dispatch = useAppDispatch();

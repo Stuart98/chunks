@@ -6,12 +6,12 @@ import { v4 as uuidv4 } from 'uuid';
 import Chunk from '@/types/Chunk.type';
 
 import { useAppSelector, useAppDispatch } from '@/state/hooks';
-import type { RootState } from '@/state/store';
+import type { RootState } from '@/app/store';
 import {
     selectChunksByFolderId,
     addChunks,
     removeChunk,
-} from '@/state/reducers/chunksSlice';
+} from '@/features/chunksList/chunksSlice';
 import { selectActiveFolderId } from '@/state/reducers/activeSlice';
 
 function ChunkList() {

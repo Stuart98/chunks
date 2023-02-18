@@ -6,7 +6,7 @@ import Editor from '@monaco-editor/react';
 
 // STATE
 import { useAppDispatch, useAppSelector } from '@/state/hooks';
-import { selectById, updateChunk } from '@/state/reducers/chunksSlice';
+import { selectById, updateChunk } from '@/features/chunksList/chunksSlice';
 import { selectActiveChunkId } from '@/state/reducers/activeSlice';
 
 // TYPES
